@@ -1,0 +1,142 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState } from 'react';
+import { ScreenType, DifficultyLevel, SessionExchange, SensorySettings } from './types';
+import { NavigationHeader } from './components/NavigationHeader';
+import { TitleScreen } from './components/TitleScreen';
+import { WaitingRoomScreen } from './components/WaitingRoomScreen';
+import { InterviewScreen } from './components/InterviewScreen';
+import { TherapistDashboardScreen } from './components/TherapistDashboardScreen';
+import { motion, AnimatePresence } from 'motion/react';
+import { startCalmingSound, stopCalmingSound, updateVolume } from './utils/audio';
+
+export default function App() {
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
+  const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
+  const [lastExchange, setLastExchange] = useState<SessionExchange | null>(null);
+
+  const [sensorySettings, setSensorySettings] = useState<SensorySettings>({
+    brightness: 90,
+    volume: 35,
+    ambientSoundActive: false,
+    soundType: 'ocean',
+  });
+
+  const [isMuted, setIsMuted] = useState<boolean>(true);
+
+  const handleUpdateSensory = (newSettings: Partial<SensorySettings>) => {
+    setSensorySettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      if (!isMuted && updated.volume > 0) {
+        updateVolume(updated.volume);
+      }
+      return updated;
+    });
+  };
+
+  const handleToggleMute = () => {
+    const nextMute = !isMuted;
+    setIsMuted(nextMute);
+    if (!nextMute && sensorySettings.volume > 0) {
+      startCalmingSound(sensorySettings.volume);
+    } else {
+      stopCalmingSound();
+    }
+  };
+
+  const handleRecordExchange = (exchange: SessionExchange) => {
+    setLastExchange(exchange);
+  };
+
+  const handleResetDemo = () => {
+    setCurrentScreen('title');
+    setDifficulty('easy');
+  };
+
+  return (
+    <div className="min-h-screen bg-[#022F33] text-slate-100 flex flex-col font-sans selection:bg-[#02C39A] selection:text-[#022F33]">
+      {/* Top Clinical Navigation Bar */}
+      <NavigationHeader
+        currentScreen={currentScreen}
+        onNavigate={(screen) => setCurrentScreen(screen)}
+        isMuted={isMuted}
+        onToggleMute={handleToggleMute}
+        onResetDemo={handleResetDemo}
+      />
+
+      {/* Main Screen Container with Smooth Transitions */}
+      <main className="flex-1 flex flex-col relative overflow-x-hidden">
+        <AnimatePresence mode="wait">
+          {currentScreen === 'title' && (
+            <motion.div
+              key="title"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1 flex items-center"
+            >
+              <TitleScreen onStartDemo={() => setCurrentScreen('waiting-room')} />
+            </motion.div>
+          )}
+
+          {currentScreen === 'waiting-room' && (
+            <motion.div
+              key="waiting-room"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1"
+            >
+              <WaitingRoomScreen
+                sensorySettings={sensorySettings}
+                onUpdateSensory={handleUpdateSensory}
+                onBeginRehearsal={() => setCurrentScreen('interview')}
+              />
+            </motion.div>
+          )}
+
+          {currentScreen === 'interview' && (
+            <motion.div
+              key="interview"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1"
+            >
+              <InterviewScreen
+                difficulty={difficulty}
+                onSelectDifficulty={(newDiff) => setDifficulty(newDiff)}
+                onRecordExchange={handleRecordExchange}
+                onContinueToDashboard={() => setCurrentScreen('therapist-dashboard')}
+              />
+            </motion.div>
+          )}
+
+          {currentScreen === 'therapist-dashboard' && (
+            <motion.div
+              key="therapist-dashboard"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1"
+            >
+              <TherapistDashboardScreen
+                difficulty={difficulty}
+                onUpdateDifficulty={(newDiff) => setDifficulty(newDiff)}
+                lastExchange={lastExchange}
+                onRestartDemo={handleResetDemo}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+    </div>
+  );
+}
