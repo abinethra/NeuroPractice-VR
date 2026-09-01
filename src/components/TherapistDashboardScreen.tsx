@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { InterviewRoomIllustration } from './VectorIllustrations';
-import { DifficultyLevel, SessionExchange } from '../types';
+import { DifficultyLevel, SessionExchange, IntakeConfig } from '../types';
 import { 
   Pause, Play, Lightbulb, ShieldAlert, CheckCircle2, RotateCcw, 
   Activity, Laptop, Sliders, AlertCircle, BarChart3, Clock, 
-  FileText, Download, Sparkles, Check, ChevronRight
+  FileText, Download, Sparkles, Check, ChevronRight, ArrowRight,
+  AlertTriangle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Chart from 'chart.js/auto';
@@ -15,14 +16,16 @@ interface TherapistDashboardScreenProps {
   difficulty: DifficultyLevel;
   onUpdateDifficulty: (diff: DifficultyLevel) => void;
   lastExchange: SessionExchange | null;
-  onRestartDemo: () => void;
+  onProceedToDebrief: () => void;
+  intakeConfig?: IntakeConfig;
 }
 
 export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> = ({
   difficulty,
   onUpdateDifficulty,
   lastExchange,
-  onRestartDemo,
+  onProceedToDebrief,
+  intakeConfig,
 }) => {
   const chartCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
@@ -311,11 +314,23 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
               </div>
 
               {/* Question */}
-              <div className="mb-3">
+              <div className="mb-2">
                 <div className="text-[11px] font-bold text-slate-500 uppercase">Interviewer (NPC):</div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">
                   "{lastExchange?.question || 'Tell me about a time you faced a difficult problem at work or school.'}"
                 </p>
+              </div>
+
+              {/* Orange Flagged Pause Line (Therapist Telemetry) */}
+              <div className="my-2.5 px-3 py-2 rounded-xl bg-[#FFFBEB] border border-[#F4A261] text-[#9A3412] flex items-center justify-between text-xs font-semibold shadow-xs">
+                <div className="flex items-center gap-2 text-[#C2410C]">
+                  <span className="text-sm font-bold text-[#F4A261]">⚠</span>
+                  <span className="font-bold text-[#C2410C]">Flag: long pause detected</span>
+                  <span className="text-[11px] text-amber-800/80 font-normal hidden sm:inline">(+4.2s delay before response formulation)</span>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#F4A261]/25 text-[#9A3412] border border-[#F4A261]/50 uppercase tracking-wider">
+                  Debrief Flag
+                </span>
               </div>
 
               {/* Participant Response */}
@@ -490,24 +505,24 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
         </div>
       </motion.div>
 
-      {/* Bottom Pitch Toolbar: Restart Demo / Standalone Offline Download */}
+      {/* Bottom Pitch Toolbar: Proceed to Debrief / Standalone Offline Download */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-        <button
-          onClick={onRestartDemo}
-          id="restart-demo-bottom-btn"
-          className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#03343A] hover:bg-[#044850] text-[#CCFBF1] hover:text-white border border-[#028090] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
-        >
-          <RotateCcw className="w-4 h-4" />
-          <span>Restart Rehearsal Demo (Screen 1)</span>
-        </button>
-
         <button
           onClick={downloadOfflineHtml}
           id="download-offline-html-bottom-btn"
-          className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#02C39A] hover:bg-[#00A896] text-[#022F33] hover:text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#02C39A]/20 flex items-center justify-center gap-2 cursor-pointer transition-all"
+          className="w-full sm:w-auto px-5 py-3 rounded-full bg-[#032A2E] hover:bg-[#043E44] text-[#CCFBF1] hover:text-white border border-[#028090] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors order-2 sm:order-1"
         >
-          <Download className="w-4 h-4" />
+          <Download className="w-4 h-4 text-[#5EEAD4]" />
           <span>Download Offline Single-File HTML</span>
+        </button>
+
+        <button
+          onClick={onProceedToDebrief}
+          id="proceed-to-debrief-btn"
+          className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#02C39A] hover:bg-[#00A896] text-[#022F33] hover:text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-[#02C39A]/20 flex items-center justify-center gap-2 cursor-pointer transition-all order-1 sm:order-2 group"
+        >
+          <span>Proceed to Session Debrief</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
@@ -525,12 +540,18 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
-              <h3 className="text-2xl font-extrabold text-white mb-2">Rehearsal Session Logged</h3>
+              <h3 className="text-2xl font-extrabold text-white mb-2">Rehearsal Session Completed</h3>
               <p className="text-sm text-[#99F6E4]/90 mb-6 leading-relaxed">
-                Participant completed the mock workplace interview with <strong>9/10 appropriate responses</strong> and zero sensory overload flags.
+                Participant finished the behavioral rehearsal scenario with <strong>9/10 appropriate responses</strong> and 1 pacing flag logged.
               </p>
 
               <div className="bg-[#032A2E] p-4 rounded-2xl border border-[#028090]/40 text-left mb-6 space-y-2 text-xs">
+                <div className="flex justify-between text-slate-300">
+                  <span>Session Goal:</span>
+                  <span className="font-bold text-white text-right max-w-[220px] truncate">
+                    {intakeConfig?.sessionGoal || 'Build confidence answering behavioral questions'}
+                  </span>
+                </div>
                 <div className="flex justify-between text-slate-300">
                   <span>Scenario Difficulty:</span>
                   <span className="font-bold text-[#5EEAD4] uppercase">{difficulty}</span>
@@ -540,8 +561,8 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                   <span className="font-bold text-[#02C39A]">Optimal (94%)</span>
                 </div>
                 <div className="flex justify-between text-slate-300">
-                  <span>Communication Competence:</span>
-                  <span className="font-bold text-white">Mastery Achieved</span>
+                  <span>Flagged Moments:</span>
+                  <span className="font-bold text-[#F4A261]">1 Long Pause (+4.2s)</span>
                 </div>
               </div>
 
@@ -550,16 +571,17 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                   onClick={() => setSessionCompletedModal(false)}
                   className="flex-1 py-3 rounded-full bg-[#03343A] hover:bg-[#044850] text-[#CCFBF1] font-bold text-xs transition-colors cursor-pointer"
                 >
-                  Close Summary
+                  Close
                 </button>
                 <button
                   onClick={() => {
                     setSessionCompletedModal(false);
-                    onRestartDemo();
+                    onProceedToDebrief();
                   }}
-                  className="flex-1 py-3 rounded-full bg-[#02C39A] hover:bg-[#00A896] text-[#022F33] font-bold text-xs transition-colors cursor-pointer"
+                  className="flex-1 py-3 rounded-full bg-[#02C39A] hover:bg-[#00A896] text-[#022F33] font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                 >
-                  Run Demo Again
+                  <span>View Full Debrief</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </motion.div>

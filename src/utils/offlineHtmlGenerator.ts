@@ -12,21 +12,22 @@ export function downloadOfflineHtml() {
     body { background-color: #022F33; color: #F8FAFC; min-height: 100vh; display: flex; flex-direction: column; }
     header { background: #032427; border-bottom: 1px solid #028090; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: #02C39A; }
-    .nav-tabs { display: flex; gap: 8px; }
-    .nav-tab { background: #04383D; border: 1px solid #00A896; color: #CCFBF1; padding: 6px 14px; border-radius: 9999px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+    .nav-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .nav-tab { background: #04383D; border: 1px solid #00A896; color: #CCFBF1; padding: 5px 12px; border-radius: 9999px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
     .nav-tab.active { background: #02C39A; color: #022F33; font-weight: 700; }
-    main { flex: 1; padding: 24px; max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+    main { flex: 1; padding: 20px; max-width: 1100px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: center; }
     .screen { display: none; }
     .screen.active { display: block; }
-    .card { background: #FFFFFF; color: #0F172A; border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    .btn-primary { background: #02C39A; color: #022F33; font-weight: 700; padding: 12px 28px; border-radius: 9999px; border: none; cursor: pointer; font-size: 1rem; transition: transform 0.15s, background 0.15s; }
+    .card { background: #FFFFFF; color: #0F172A; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .btn-primary { background: #02C39A; color: #022F33; font-weight: 700; padding: 10px 24px; border-radius: 9999px; border: none; cursor: pointer; font-size: 0.95rem; transition: transform 0.15s, background 0.15s; }
     .btn-primary:hover { background: #00A896; color: #FFFFFF; transform: translateY(-1px); }
-    .btn-outline { background: #04383E; color: #99F6E4; border: 1.5px solid #028090; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; margin: 6px 0; text-align: left; width: 100%; font-size: 0.95rem; }
+    .btn-outline { background: #04383E; color: #99F6E4; border: 1.5px solid #028090; padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; margin: 6px 0; text-align: left; width: 100%; font-size: 0.9rem; }
     .btn-outline:hover { background: #028090; color: #FFFFFF; }
     .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
     input[type=range] { accent-color: #02C39A; flex: 1; }
     .svg-frame { border-radius: 16px; overflow: hidden; background: #011E21; box-shadow: 0 8px 24px rgba(0,0,0,0.4); margin-bottom: 16px; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
     @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -34,42 +35,72 @@ export function downloadOfflineHtml() {
   <header>
     <div class="brand">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#02C39A" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      NeuroPractice VR (Offline Backup)
+      NeuroPractice VR
     </div>
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="showScreen('title')">1. Title</button>
-      <button class="nav-tab" onclick="showScreen('waiting')">2. Waiting Room</button>
-      <button class="nav-tab" onclick="showScreen('interview')">3. VR Interview</button>
-      <button class="nav-tab" onclick="showScreen('dashboard')">4. Clinician View</button>
+      <button class="nav-tab active" id="tab-intake" onclick="showScreen('intake')">1. Intake</button>
+      <button class="nav-tab" id="tab-waiting" onclick="showScreen('waiting')">2. Waiting Room</button>
+      <button class="nav-tab" id="tab-interview" onclick="showScreen('interview')">3. VR Interview</button>
+      <button class="nav-tab" id="tab-dashboard" onclick="showScreen('dashboard')">4. Clinician Hub</button>
+      <button class="nav-tab" id="tab-debrief" onclick="showScreen('debrief')">5. Debrief</button>
     </div>
   </header>
 
   <main>
-    <!-- SCREEN 1: TITLE -->
-    <div id="screen-title" class="screen active" style="text-align: center; max-width: 650px; margin: 0 auto;">
-      <div style="background: rgba(2,195,154,0.1); border: 1px solid #00A896; display: inline-block; padding: 6px 16px; border-radius: 9999px; color: #5EEAD4; font-size: 0.85rem; font-weight: 600; margin-bottom: 20px;">
-        Hackathon Interactive Pitch Prototype
+    <!-- SCREEN 1: INTAKE SETUP -->
+    <div id="screen-intake" class="screen active">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 20px auto;">
+        <div style="background: rgba(2,195,154,0.1); border: 1px solid #00A896; display: inline-block; padding: 4px 14px; border-radius: 9999px; color: #5EEAD4; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;">
+          Screen 1 of 5 &bull; Clinical Calibration
+        </div>
+        <h1 style="font-size: 2.2rem; color: #CCFBF1; margin-bottom: 8px; font-weight: 800;">Therapist Intake Setup</h1>
+        <p style="font-size: 1rem; color: #99F6E4; line-height: 1.5;">
+          Set participant behavioral goals and starting difficulty before entering VR.
+        </p>
       </div>
-      <h1 style="font-size: 2.75rem; color: #CCFBF1; margin-bottom: 14px; font-weight: 800; letter-spacing: -0.5px;">NeuroPractice VR</h1>
-      <p style="font-size: 1.2rem; color: #99F6E4; line-height: 1.6; margin-bottom: 30px;">
-        Immersive social-skills rehearsal for autistic teens & adults
-      </p>
-      <button class="btn-primary" onclick="showScreen('waiting')">Start Demo &rarr;</button>
+
+      <div class="card" style="background: #011C1E; border: 2px solid #028090; color: #E2E8F0; max-width: 680px; margin: 0 auto;">
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 0.8rem; font-weight: 700; color: #5EEAD4; text-transform: uppercase;">Participant ID</label>
+          <input type="text" id="intake-name" value="Jordan M." style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 10px; background: #032A2E; border: 1px solid #028090; color: white;">
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="font-size: 0.8rem; font-weight: 700; color: #5EEAD4; text-transform: uppercase;">Primary Session Goal</label>
+          <select id="intake-goal" style="width: 100%; padding: 10px; margin-top: 4px; border-radius: 10px; background: #032A2E; border: 1px solid #028090; color: white;">
+            <option value="Build confidence answering behavioral questions">Build confidence answering behavioral questions</option>
+            <option value="Practice asking for a moment to think under pressure">Practice asking for a moment to think under pressure</option>
+            <option value="Master structured STAR-method technical responses">Master structured STAR-method technical responses</option>
+            <option value="Navigate unexpected interruptions with composure">Navigate unexpected interruptions with composure</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label style="font-size: 0.8rem; font-weight: 700; color: #5EEAD4; text-transform: uppercase;">Starting Difficulty Tier</label>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <button type="button" class="nav-tab active" id="intake-diff-easy" onclick="setIntakeDiff('easy')">● Easy</button>
+            <button type="button" class="nav-tab" id="intake-diff-mod" onclick="setIntakeDiff('moderate')">● Moderate</button>
+            <button type="button" class="nav-tab" id="intake-diff-hard" onclick="setIntakeDiff('hard')">● Hard</button>
+          </div>
+        </div>
+
+        <div style="text-align: right; border-top: 1px solid #028090; padding-top: 16px;">
+          <button class="btn-primary" onclick="startSessionFromIntake()">Start Session &rarr;</button>
+        </div>
+      </div>
     </div>
 
     <!-- SCREEN 2: WAITING ROOM -->
     <div id="screen-waiting" class="screen">
-      <div class="svg-frame" id="lobby-viewport" style="max-height: 420px; transition: filter 0.2s;">
+      <div class="svg-frame" id="lobby-viewport" style="max-height: 380px; transition: filter 0.2s;">
         <svg viewBox="0 0 800 450" style="width: 100%; display: block;">
           <rect width="800" height="340" fill="#033F45"/>
           <polygon points="0,340 800,340 800,450 0,450" fill="#0A4C52"/>
           <rect x="80" y="60" width="200" height="220" rx="16" fill="#93C5FD" stroke="#028090" stroke-width="4"/>
           <ellipse cx="140" cy="245" rx="70" ry="35" fill="#10B981"/>
           <circle cx="180" cy="115" r="22" fill="#FEF08A"/>
-          <!-- Plant -->
           <polygon points="310,380 345,380 340,420 315,420" fill="#D97706"/>
           <circle cx="330" cy="320" r="30" fill="#10B981"/>
-          <!-- Couch & Avatar -->
           <rect x="420" y="250" width="260" height="110" rx="16" fill="#0C4A50" stroke="#00A896" stroke-width="2"/>
           <rect x="410" y="320" width="280" height="40" rx="10" fill="#00A896"/>
           <circle cx="480" cy="210" r="24" fill="#99F6E4"/>
@@ -89,25 +120,23 @@ export function downloadOfflineHtml() {
             <input type="range" min="0" max="100" value="40">
           </div>
         </div>
-        <button class="btn-primary" onclick="showScreen('interview')">Begin When Ready &rarr;</button>
+        <button class="btn-primary" onclick="showScreen('interview')">Begin VR Rehearsal &rarr;</button>
       </div>
     </div>
 
     <!-- SCREEN 3: INTERVIEW -->
     <div id="screen-interview" class="screen">
-      <div class="svg-frame" style="max-height: 280px;">
+      <div class="svg-frame" style="max-height: 260px;">
         <svg viewBox="0 0 800 360" style="width: 100%; display: block;">
           <rect width="800" height="280" fill="#04383E"/>
           <polygon points="0,280 800,280 800,360 0,360" fill="#021C1E"/>
-          <!-- NPC Avatar -->
           <circle cx="400" cy="110" r="32" fill="#CBD5E1"/>
           <path d="M 355 220 C 355 160, 370 148, 400 148 C 430 148, 445 160, 445 220 Z" fill="#334155"/>
-          <!-- Desk -->
           <polygon points="120,230 680,230 720,340 80,340" fill="#0F766E"/>
         </svg>
       </div>
 
-      <div class="card" style="margin-bottom: 16px; border: 2px solid #02C39A;" id="interviewer-bubble-card">
+      <div class="card" style="margin-bottom: 14px; border: 2px solid #02C39A;" id="interviewer-bubble-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #E2E8F0; padding-bottom: 6px;">
           <div style="font-size: 0.8rem; font-weight: 800; color: #028090; text-transform: uppercase;" id="prompt-header-label">
             <span id="prompt-dot" style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #02C39A; margin-right: 6px;"></span>
@@ -117,7 +146,7 @@ export function downloadOfflineHtml() {
             Tone: Warm & Encouraging
           </div>
         </div>
-        <div id="npc-speech" style="font-size: 1.1rem; font-weight: 600; color: #0F172A; line-height: 1.5;">
+        <div id="npc-speech" style="font-size: 1.05rem; font-weight: 600; color: #0F172A; line-height: 1.5;">
           "Hi there! It is wonderful to meet you today. Please take all the time you need—there are no trick questions here. Could you share a time you encountered a challenging problem at work or school, and how you worked through it step by step?"
         </div>
       </div>
@@ -145,7 +174,7 @@ export function downloadOfflineHtml() {
       </div>
 
       <div id="continue-section" style="display: none; margin-top: 16px; text-align: right;">
-        <button class="btn-primary" onclick="showScreen('dashboard')">Continue to Therapist View &rarr;</button>
+        <button class="btn-primary" onclick="showScreen('dashboard')">Continue to Clinician Hub &rarr;</button>
       </div>
     </div>
 
@@ -155,7 +184,7 @@ export function downloadOfflineHtml() {
         <div>
           <div class="card" style="background: #032427; border: 1px solid #00A896; color: #E2E8F0; margin-bottom: 16px;">
             <div style="font-size: 0.85rem; font-weight: 700; color: #02C39A; margin-bottom: 8px;">Mirrored VR Session Thumbnail</div>
-            <div class="svg-frame" style="margin-bottom: 10px; max-height: 160px;">
+            <div class="svg-frame" style="margin-bottom: 10px; max-height: 150px;">
               <svg viewBox="0 0 800 360" style="width: 100%; display: block;">
                 <rect width="800" height="280" fill="#04383E"/>
                 <circle cx="400" cy="110" r="32" fill="#CBD5E1"/>
@@ -166,9 +195,17 @@ export function downloadOfflineHtml() {
             <div style="font-size: 0.85rem; color: #99F6E4;">Live Status: <span style="color: #02C39A; font-weight: 700;">Active Synced VR Stream</span></div>
           </div>
 
+          <!-- Transcript Card with Orange Flagged Pause -->
           <div class="card" style="margin-bottom: 16px;">
             <div style="font-size: 0.85rem; font-weight: 700; color: #028090; margin-bottom: 8px;">Live Transcript</div>
             <p style="font-size: 0.95rem; color: #334155; margin-bottom: 6px;"><strong>Interviewer:</strong> Tell me about a time you faced a difficult problem...</p>
+            
+            <!-- Orange Flagged Line -->
+            <div style="background: #FEF3C7; border: 1px solid #F4A261; color: #9A3412; padding: 6px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; margin: 8px 0; display: flex; justify-content: space-between; align-items: center;">
+              <span>⚠ Flag: long pause detected (+4.2s delay)</span>
+              <span style="font-size: 0.75rem; background: rgba(244,162,97,0.25); padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">Debrief Flag</span>
+            </div>
+
             <p id="transcript-user" style="font-size: 0.95rem; color: #0F766E; margin-bottom: 6px;"><strong>Participant:</strong> [Selected response registered]</p>
             <p id="transcript-npc" style="font-size: 0.95rem; color: #028090;"><strong>NPC Reply:</strong> [Feedback provided]</p>
           </div>
@@ -181,14 +218,70 @@ export function downloadOfflineHtml() {
               <button class="nav-tab" onclick="alert('Session Paused for Co-Regulation')">Pause</button>
               <button class="nav-tab" onclick="alert('Visual Hint Cued in Headset')">Cue Hint</button>
               <button class="nav-tab" onclick="alert('Sensory Intensity Eased Off')">Ease Off</button>
-              <button class="nav-tab" onclick="alert('Session Ended and Logged')">End Session</button>
+              <button class="nav-tab" onclick="showScreen('debrief')">End Session &rarr;</button>
             </div>
           </div>
 
-          <div class="card">
-            <div style="font-size: 0.85rem; font-weight: 700; color: #028090; margin-bottom: 8px;">Appropriate Responses Per Session (5 Mock Runs)</div>
-            <canvas id="offlineChart" height="160"></canvas>
+          <div class="card" style="margin-bottom: 16px;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #028090; margin-bottom: 8px;">Appropriate Responses Per Session</div>
+            <canvas id="offlineChart" height="150"></canvas>
           </div>
+
+          <div style="text-align: right;">
+            <button class="btn-primary" onclick="showScreen('debrief')">Proceed to Session Debrief &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: DEBRIEF / SESSION SUMMARY -->
+    <div id="screen-debrief" class="screen">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 20px auto;">
+        <div style="background: rgba(2,195,154,0.1); border: 1px solid #00A896; display: inline-block; padding: 4px 14px; border-radius: 9999px; color: #5EEAD4; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;">
+          Screen 5 of 5 &bull; Clinical Debrief &amp; Summary
+        </div>
+        <h1 style="font-size: 2.2rem; color: #CCFBF1; margin-bottom: 8px; font-weight: 800;">Session Debrief &amp; Summary</h1>
+      </div>
+
+      <div class="card" style="background: #011C1E; border: 2px solid #028090; color: #E2E8F0; margin-bottom: 16px;">
+        <div class="grid-4" style="margin-bottom: 20px;">
+          <div style="background: #032A2E; padding: 14px; border-radius: 14px; border: 1px solid #028090;">
+            <div style="font-size: 0.75rem; color: #99F6E4; text-transform: uppercase;">Session Goal</div>
+            <div id="debrief-goal-text" style="font-weight: 700; font-size: 0.95rem; color: white; margin-top: 4px;">
+              Build confidence answering behavioral questions
+            </div>
+          </div>
+          <div style="background: #032A2E; padding: 14px; border-radius: 14px; border: 1px solid #028090;">
+            <div style="font-size: 0.75rem; color: #99F6E4; text-transform: uppercase;">Scenario Completed</div>
+            <div id="debrief-scenario-text" style="font-weight: 700; font-size: 0.95rem; color: #02C39A; margin-top: 4px;">
+              Guided Collaborative Challenge
+            </div>
+          </div>
+          <div style="background: #032A2E; padding: 14px; border-radius: 14px; border: 1px solid #F4A261;">
+            <div style="font-size: 0.75rem; color: #F4A261; text-transform: uppercase;">Flagged Moments</div>
+            <div style="font-weight: 800; font-size: 1.25rem; color: white; margin-top: 4px;">
+              1 <span style="font-size: 0.8rem; color: #F4A261;">(Long Pause +4.2s)</span>
+            </div>
+          </div>
+          <div style="background: #032A2E; padding: 14px; border-radius: 14px; border: 1px solid #02C39A;">
+            <div style="font-size: 0.75rem; color: #02C39A; text-transform: uppercase;">Score Out of 10</div>
+            <div style="font-weight: 800; font-size: 1.25rem; color: #02C39A; margin-top: 4px;">
+              9 <span style="font-size: 0.85rem; color: #94A3B8;">/ 10</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: white; color: #0F172A; padding: 16px; border-radius: 14px; margin-bottom: 20px;">
+          <div style="font-size: 0.8rem; font-weight: 800; color: #028090; text-transform: uppercase; margin-bottom: 8px;">Auto-Generated Clinical Notes</div>
+          <ul style="padding-left: 18px; line-height: 1.6; font-size: 0.9rem; color: #334155;">
+            <li>Handled conversational structure well and showed strong methodical problem-solving.</li>
+            <li>Took extra time on question formulation (+4.2s pause) — discuss pacing and self-advocacy strategies.</li>
+            <li>Maintained calm sensory self-regulation throughout the rehearsal round.</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; border-top: 1px solid #028090; padding-top: 16px;">
+          <button class="btn-primary" onclick="showScreen('intake')">Restart Demo (New Session)</button>
         </div>
       </div>
     </div>
@@ -272,8 +365,25 @@ export function downloadOfflineHtml() {
     function showScreen(name) {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById('screen-' + name).classList.add('active');
+      const screenEl = document.getElementById('screen-' + name);
+      if (screenEl) screenEl.classList.add('active');
+      const tabEl = document.getElementById('tab-' + name);
+      if (tabEl) tabEl.classList.add('active');
       if (name === 'dashboard') { initChart(); }
+    }
+
+    function setIntakeDiff(diff) {
+      currentDiff = diff;
+      document.getElementById('intake-diff-easy').classList.toggle('active', diff === 'easy');
+      document.getElementById('intake-diff-mod').classList.toggle('active', diff === 'moderate');
+      document.getElementById('intake-diff-hard').classList.toggle('active', diff === 'hard');
+    }
+
+    function startSessionFromIntake() {
+      const goal = document.getElementById('intake-goal').value;
+      document.getElementById('debrief-goal-text').innerText = goal;
+      setDiff(currentDiff);
+      showScreen('waiting');
     }
 
     function renderOptions(diff) {
@@ -307,7 +417,9 @@ export function downloadOfflineHtml() {
       document.getElementById('diff-easy').classList.remove('active');
       document.getElementById('diff-mod').classList.remove('active');
       document.getElementById('diff-hard').classList.remove('active');
-      document.getElementById('diff-' + (diff === 'easy' ? 'easy' : diff === 'moderate' ? 'mod' : 'hard')).classList.add('active');
+      if (diff === 'easy') document.getElementById('diff-easy').classList.add('active');
+      if (diff === 'moderate') document.getElementById('diff-mod').classList.add('active');
+      if (diff === 'hard') document.getElementById('diff-hard').classList.add('active');
       renderOptions(diff);
       document.getElementById('continue-section').style.display = 'none';
     }
@@ -326,23 +438,26 @@ export function downloadOfflineHtml() {
       if (chartInitialized) return;
       chartInitialized = true;
       const ctx = document.getElementById('offlineChart');
-      if (!ctx || typeof Chart === 'undefined') return;
+      if (!ctx) return;
       new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-          labels: ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5'],
+          labels: ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Today'],
           datasets: [{
             label: 'Appropriate Responses',
             data: [3, 5, 6, 8, 9],
-            backgroundColor: '#028090',
-            borderColor: '#00A896',
-            borderWidth: 1.5,
-            borderRadius: 6
+            borderColor: '#02C39A',
+            backgroundColor: 'rgba(2, 195, 154, 0.2)',
+            tension: 0.3,
+            fill: true
           }]
         },
         options: {
           responsive: true,
-          scales: { y: { beginAtZero: true, max: 10 } }
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, max: 10 }
+          }
         }
       });
     }
@@ -352,11 +467,11 @@ export function downloadOfflineHtml() {
 
   const blob = new Blob([offlineHtmlContent], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'NeuroPractice-VR-SinglePage-Demo.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = 'NeuroPractice_VR_Prototype_Backup.html';
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
   URL.revokeObjectURL(url);
 }

@@ -1,6 +1,13 @@
-export type ScreenType = 'title' | 'waiting-room' | 'interview' | 'therapist-dashboard';
+export type ScreenType = 'title' | 'intake' | 'waiting-room' | 'interview' | 'therapist-dashboard' | 'debrief';
 
 export type DifficultyLevel = 'easy' | 'moderate' | 'hard';
+
+export interface IntakeConfig {
+  participantName: string;
+  sessionGoal: string;
+  startingDifficulty: DifficultyLevel;
+  clinicalNotes: string;
+}
 
 export interface ResponseOption {
   id: string;
@@ -31,6 +38,8 @@ export interface SessionExchange {
   npcReply: string;
   clinicianNotes: string;
   skillsDemonstrated: string[];
+  appropriateScore?: number;
+  flaggedPauseSeconds?: number;
 }
 
 export interface SensorySettings {
@@ -47,3 +56,4 @@ export interface TherapistActionAlert {
   message: string;
   timestamp: string;
 }
+

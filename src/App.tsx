@@ -4,12 +4,14 @@
  */
 
 import React, { useState } from 'react';
-import { ScreenType, DifficultyLevel, SessionExchange, SensorySettings } from './types';
+import { ScreenType, DifficultyLevel, SessionExchange, SensorySettings, IntakeConfig } from './types';
 import { NavigationHeader } from './components/NavigationHeader';
 import { TitleScreen } from './components/TitleScreen';
+import { IntakeScreen } from './components/IntakeScreen';
 import { WaitingRoomScreen } from './components/WaitingRoomScreen';
 import { InterviewScreen } from './components/InterviewScreen';
 import { TherapistDashboardScreen } from './components/TherapistDashboardScreen';
+import { DebriefScreen } from './components/DebriefScreen';
 import { motion, AnimatePresence } from 'motion/react';
 import { startCalmingSound, stopCalmingSound, updateVolume } from './utils/audio';
 
@@ -17,6 +19,13 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
   const [lastExchange, setLastExchange] = useState<SessionExchange | null>(null);
+
+  const [intakeConfig, setIntakeConfig] = useState<IntakeConfig>({
+    participantName: 'Jordan M.',
+    sessionGoal: 'Build confidence answering behavioral questions',
+    startingDifficulty: 'easy',
+    clinicalNotes: 'Participant benefits from structured pacing and positive reinforcement during initial rehearsal rounds.',
+  });
 
   const [sensorySettings, setSensorySettings] = useState<SensorySettings>({
     brightness: 90,
@@ -45,6 +54,12 @@ export default function App() {
     } else {
       stopCalmingSound();
     }
+  };
+
+  const handleStartSessionFromIntake = (config: IntakeConfig) => {
+    setIntakeConfig(config);
+    setDifficulty(config.startingDifficulty);
+    setCurrentScreen('waiting-room');
   };
 
   const handleRecordExchange = (exchange: SessionExchange) => {
@@ -79,7 +94,23 @@ export default function App() {
               transition={{ duration: 0.25 }}
               className="w-full flex-1 flex items-center"
             >
-              <TitleScreen onStartDemo={() => setCurrentScreen('waiting-room')} />
+              <TitleScreen onStartDemo={() => setCurrentScreen('intake')} />
+            </motion.div>
+          )}
+
+          {currentScreen === 'intake' && (
+            <motion.div
+              key="intake"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1"
+            >
+              <IntakeScreen
+                initialConfig={intakeConfig}
+                onStartSession={handleStartSessionFromIntake}
+              />
             </motion.div>
           )}
 
@@ -130,6 +161,25 @@ export default function App() {
               <TherapistDashboardScreen
                 difficulty={difficulty}
                 onUpdateDifficulty={(newDiff) => setDifficulty(newDiff)}
+                lastExchange={lastExchange}
+                onProceedToDebrief={() => setCurrentScreen('debrief')}
+                intakeConfig={intakeConfig}
+              />
+            </motion.div>
+          )}
+
+          {currentScreen === 'debrief' && (
+            <motion.div
+              key="debrief"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1"
+            >
+              <DebriefScreen
+                intakeConfig={intakeConfig}
+                difficulty={difficulty}
                 lastExchange={lastExchange}
                 onRestartDemo={handleResetDemo}
               />
