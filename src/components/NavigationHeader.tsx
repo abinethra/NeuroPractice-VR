@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScreenType } from '../types';
-import { Sparkles, Glasses, Download, RotateCcw, Volume2, VolumeX, ShieldCheck } from 'lucide-react';
+import { Sparkles, Glasses, Download, RotateCcw, Volume2, VolumeX, ShieldCheck, Activity } from 'lucide-react';
 import { downloadOfflineHtml } from '../utils/offlineHtmlGenerator';
+import { checkBackendHealth, HealthStatus } from '../services/apiService';
 
 interface NavigationHeaderProps {
   currentScreen: ScreenType;
@@ -18,6 +19,14 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   onToggleMute,
   onResetDemo,
 }) => {
+  const [health, setHealth] = useState<HealthStatus | null>(null);
+
+  useEffect(() => {
+    checkBackendHealth().then((status) => {
+      if (status) setHealth(status);
+    });
+  }, []);
+
   const steps: { id: ScreenType; label: string; number: number }[] = [
     { id: 'intake', label: 'Intake', number: 1 },
     { id: 'scenario-select', label: 'Scenarios', number: 2 },
@@ -48,6 +57,12 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
                 <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-[#02C39A]/20 text-[#5EEAD4] border border-[#02C39A]/40 uppercase tracking-wider">
                   VR
                 </span>
+                {health?.status === 'ok' && (
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#028090]/30 text-[#02C39A] border border-[#02C39A]/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#02C39A] animate-ping" />
+                    <span>API Live</span>
+                  </span>
+                )}
               </div>
               <p className="text-[11px] text-[#99F6E4]/80 hidden sm:block font-medium">
                 Clinical Social-Skills Rehearsal Platform

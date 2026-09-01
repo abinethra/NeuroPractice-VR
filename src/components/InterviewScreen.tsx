@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { playSoftChime } from '../utils/audio';
+import { logSessionTelemetry } from '../services/apiService';
 
 interface InterviewScreenProps {
   scenarioId?: ScenarioId;
@@ -66,6 +67,7 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
         appropriateScore: option.appropriateScore,
       };
       onRecordExchange(exchange);
+      logSessionTelemetry(exchange, 'Rahul K.', 'Social Communication & Executive Pacing');
     }, 450);
   };
 

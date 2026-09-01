@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DifficultyLevel, IntakeConfig, ScenarioId, SessionExchange } from '../types';
 import { DIFFICULTY_PALETTE, getScenarioData, SCENARIO_CATALOG } from '../data/interviewScenarios';
 import { 
   Award, CheckCircle2, AlertTriangle, Target, RotateCcw, Download,
   Sparkles, FileText, User, Activity, Clock, ShieldCheck, ArrowRight,
-  UtensilsCrossed, Briefcase
+  UtensilsCrossed, Briefcase, Database, Cpu, Loader2
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { downloadOfflineHtml } from '../utils/offlineHtmlGenerator';
+import { fetchClinicalAnalysis, logSessionTelemetry } from '../services/apiService';
 
 interface DebriefScreenProps {
   intakeConfig: IntakeConfig;
@@ -27,10 +28,13 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
   const currentScenario = getScenarioData(activeScenarioId, difficulty);
   const activeDotColor = DIFFICULTY_PALETTE[difficulty] || '#02C39A';
 
-  // Calculate score (out of 10)
-  const score = lastExchange?.appropriateScore || (difficulty === 'hard' ? 10 : 9);
-  
-  // Auto-generate clinical debrief notes based on scenario, difficulty, and exchange
+  const [aiNotes, setAiNotes] = useState<string[] | null>(null);
+  const [aiScore, setAiScore] = useState<number | null>(null);
+  const [aiRecommendation, setAiRecommendation] = useState<string | null>(null);
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
+  const [backendSynced, setBackendSynced] = useState(false);
+
+  // Auto-generate clinical debrief notes fallback based on scenario, difficulty, and exchange
   const generateDebriefNotes = (): string[] => {
     if (activeScenarioId === 'restaurant-ordering') {
       if (difficulty === 'hard') {
@@ -75,7 +79,50 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
     ];
   };
 
-  const debriefNotes = generateDebriefNotes();
+  useEffect(() => {
+    // Log to backend & optionally fetch Gemini Clinical debrief
+    let isMounted = true;
+    async function syncBackend() {
+      if (lastExchange) {
+        const logged = await logSessionTelemetry(
+          lastExchange,
+          intakeConfig.participantName,
+          intakeConfig.sessionGoal
+        );
+        if (isMounted && logged) {
+          setBackendSynced(true);
+        }
+      }
+
+      setIsLoadingAi(true);
+      const res = await fetchClinicalAnalysis({
+        participantName: intakeConfig.participantName,
+        sessionGoal: intakeConfig.sessionGoal,
+        scenarioTitle: scenarioMeta.title,
+        difficulty: difficulty,
+        exchanges: lastExchange ? [lastExchange] : [],
+        hesitationTimeSec: lastExchange?.hesitationTimeSec || 4.2,
+      });
+
+      if (isMounted) {
+        setIsLoadingAi(false);
+        if (res && res.takeaways && res.takeaways.length > 0) {
+          setAiNotes(res.takeaways);
+          if (res.score) setAiScore(res.score);
+          if (res.recommendations) setAiRecommendation(res.recommendations);
+        }
+      }
+    }
+
+    syncBackend();
+    return () => {
+      isMounted = false;
+    };
+  }, [lastExchange, intakeConfig, difficulty, scenarioMeta.title]);
+
+  // Calculate score (out of 10)
+  const score = aiScore || lastExchange?.appropriateScore || (difficulty === 'hard' ? 10 : 9);
+  const debriefNotes = aiNotes || generateDebriefNotes();
   const flaggedCount = 1; // 1 long pause moment detected
 
   return (
@@ -188,9 +235,24 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
 
         {/* Clinical Auto-Generated Debrief Notes */}
         <div className="bg-[#022427] rounded-2xl p-5 border border-[#028090]/40">
-          <div className="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider text-[#5EEAD4]">
-            <Sparkles className="w-4 h-4 text-[#02C39A]" />
-            <span>Auto-Generated Clinical Discussion Notes</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5EEAD4]">
+              <Sparkles className="w-4 h-4 text-[#02C39A]" />
+              <span>AI-Assisted Clinical Debrief &amp; Observations</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {isLoadingAi ? (
+                <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#028090]/30 text-[#99F6E4] text-[11px] font-mono border border-[#028090]/50 animate-pulse">
+                  <Loader2 className="w-3 h-3 animate-spin text-[#02C39A]" />
+                  <span>Analyzing Telemetry...</span>
+                </span>
+              ) : backendSynced ? (
+                <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#02C39A]/20 text-[#5EEAD4] text-[11px] font-mono border border-[#02C39A]/40">
+                  <Database className="w-3 h-3 text-[#02C39A]" />
+                  <span>Backend Telemetry Synced</span>
+                </span>
+              ) : null}
+            </div>
           </div>
 
           <div className="space-y-2.5">
@@ -206,6 +268,16 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
               </div>
             ))}
           </div>
+
+          {aiRecommendation && (
+            <div className="mt-3.5 pt-3 border-t border-[#028090]/30 flex items-start gap-2.5 text-xs text-[#99F6E4]">
+              <Cpu className="w-4 h-4 text-[#02C39A] shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold text-white uppercase tracking-wider text-[11px] block">Therapist Next-Step Recommendation:</span>
+                <p className="text-slate-200 mt-0.5">{aiRecommendation}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Action Buttons: Restart Demo & Export */}

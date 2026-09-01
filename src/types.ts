@@ -63,6 +63,8 @@ export interface SessionExchange {
   skillsDemonstrated: string[];
   appropriateScore?: number;
   flaggedPauseSeconds?: number;
+  hesitationTimeSec?: number;
+  longPauseFlagged?: boolean;
 }
 
 export interface SensorySettings {
