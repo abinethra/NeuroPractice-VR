@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { InterviewRoomIllustration } from './VectorIllustrations';
-import { DifficultyLevel, SessionExchange, IntakeConfig } from '../types';
+import { InterviewRoomIllustration, RestaurantRoomIllustration } from './VectorIllustrations';
+import { DifficultyLevel, SessionExchange, IntakeConfig, ScenarioId } from '../types';
+import { SCENARIO_CATALOG } from '../data/interviewScenarios';
 import { 
   Pause, Play, Lightbulb, ShieldAlert, CheckCircle2, RotateCcw, 
   Activity, Laptop, Sliders, AlertCircle, BarChart3, Clock, 
   FileText, Download, Sparkles, Check, ChevronRight, ArrowRight,
-  AlertTriangle
+  AlertTriangle, UtensilsCrossed, Briefcase
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Chart from 'chart.js/auto';
@@ -38,6 +39,11 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
   } | null>(null);
 
   const [sessionCompletedModal, setSessionCompletedModal] = useState(false);
+
+  const activeScenarioId: ScenarioId = lastExchange?.scenarioId || intakeConfig?.selectedScenarioId || 'job-interview';
+  const activeScenarioMeta = SCENARIO_CATALOG.find((s) => s.id === activeScenarioId) || SCENARIO_CATALOG[0];
+  const participantName = intakeConfig?.participantName || 'Rahul K.';
+  const liveSessionLabel = `${activeScenarioMeta.title} \u00B7 ${participantName}`;
 
   // Difficulty numeric mapping for slider: 1 = easy, 2 = moderate, 3 = hard
   const diffToNum = (d: DifficultyLevel): number => {
@@ -236,15 +242,16 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
         className="bg-[#011C1E] rounded-3xl border-4 border-[#03343A] shadow-2xl p-4 sm:p-6 mb-5 relative"
       >
         {/* Laptop Top Bezel / Status Bar */}
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#028090]/30 text-xs text-[#99F6E4]/70">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-[#028090]/30 text-xs text-[#99F6E4]/70 gap-2">
           <div className="flex items-center gap-2">
             <Laptop className="w-4 h-4 text-[#02C39A]" />
             <span className="font-semibold text-white">NeuroPractice Clinician Console v2.4</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="hidden sm:inline">Session ID: #NP-8821</span>
-            <span className="px-2 py-0.5 rounded bg-[#02C39A]/20 text-[#5EEAD4] font-mono text-[11px] border border-[#02C39A]/30">
-              LIVE TELEMETRY
+            <span className="px-2.5 py-1 rounded-full bg-[#02C39A]/20 text-[#5EEAD4] font-mono text-[11px] border border-[#02C39A]/40 font-bold flex items-center gap-1.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#02C39A] animate-pulse" />
+              <span>LIVE SESSION: {liveSessionLabel}</span>
             </span>
           </div>
         </div>
@@ -277,7 +284,7 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                 <div className="flex items-center gap-2">
                   <Activity className="w-4 h-4 text-[#02C39A]" />
                   <span className="text-xs font-bold text-white uppercase tracking-wider">
-                    Mirrored VR Participant View (Thumbnail)
+                    Mirrored VR Participant View ({activeScenarioMeta.title})
                   </span>
                 </div>
                 <span className="text-[10px] px-2 py-0.5 rounded bg-[#022427] text-[#99F6E4] font-medium border border-[#028090]/30">
@@ -287,7 +294,11 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
 
               {/* Reusable mini-scene illustration with pause overlay */}
               <div className="relative h-[160px] sm:h-[180px] rounded-xl overflow-hidden border border-[#00A896]/30">
-                <InterviewRoomIllustration isThumbnail={true} isSpeaking={!isSessionPaused} />
+                {activeScenarioId === 'restaurant-ordering' ? (
+                  <RestaurantRoomIllustration isThumbnail={true} isSpeaking={!isSessionPaused} />
+                ) : (
+                  <InterviewRoomIllustration isThumbnail={true} isSpeaking={!isSessionPaused} />
+                )}
                 
                 {isSessionPaused && (
                   <div className="absolute inset-0 bg-[#022F33]/85 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4">
@@ -305,7 +316,7 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[#028090]" />
                   <span className="text-xs font-extrabold uppercase tracking-wider text-[#028090]">
-                    Live Exchange Transcript
+                    Live Exchange Transcript ({activeScenarioMeta.title})
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-400 font-mono">
@@ -315,9 +326,11 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
 
               {/* Question */}
               <div className="mb-2">
-                <div className="text-[11px] font-bold text-slate-500 uppercase">Interviewer (NPC):</div>
+                <div className="text-[11px] font-bold text-slate-500 uppercase">
+                  {activeScenarioMeta.roleLabel} ({activeScenarioMeta.npcName}):
+                </div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">
-                  "{lastExchange?.question || 'Tell me about a time you faced a difficult problem at work or school.'}"
+                  "{lastExchange?.question || (activeScenarioId === 'restaurant-ordering' ? 'What can I get started for you today?' : 'Tell me about a time you faced a difficult problem at work or school.')}"
                 </p>
               </div>
 

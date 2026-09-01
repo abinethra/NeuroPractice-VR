@@ -4,10 +4,11 @@
  */
 
 import React, { useState } from 'react';
-import { ScreenType, DifficultyLevel, SessionExchange, SensorySettings, IntakeConfig } from './types';
+import { ScreenType, DifficultyLevel, SessionExchange, SensorySettings, IntakeConfig, ScenarioId } from './types';
 import { NavigationHeader } from './components/NavigationHeader';
 import { TitleScreen } from './components/TitleScreen';
 import { IntakeScreen } from './components/IntakeScreen';
+import { ScenarioSelectScreen } from './components/ScenarioSelectScreen';
 import { WaitingRoomScreen } from './components/WaitingRoomScreen';
 import { InterviewScreen } from './components/InterviewScreen';
 import { TherapistDashboardScreen } from './components/TherapistDashboardScreen';
@@ -18,13 +19,15 @@ import { startCalmingSound, stopCalmingSound, updateVolume } from './utils/audio
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('title');
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
+  const [selectedScenarioId, setSelectedScenarioId] = useState<ScenarioId>('job-interview');
   const [lastExchange, setLastExchange] = useState<SessionExchange | null>(null);
 
   const [intakeConfig, setIntakeConfig] = useState<IntakeConfig>({
-    participantName: 'Jordan M.',
+    participantName: 'Rahul K.',
     sessionGoal: 'Build confidence answering behavioral questions',
     startingDifficulty: 'easy',
     clinicalNotes: 'Participant benefits from structured pacing and positive reinforcement during initial rehearsal rounds.',
+    selectedScenarioId: 'job-interview',
   });
 
   const [sensorySettings, setSensorySettings] = useState<SensorySettings>({
@@ -59,7 +62,12 @@ export default function App() {
   const handleStartSessionFromIntake = (config: IntakeConfig) => {
     setIntakeConfig(config);
     setDifficulty(config.startingDifficulty);
-    setCurrentScreen('waiting-room');
+    setCurrentScreen('scenario-select');
+  };
+
+  const handleSelectScenario = (scenarioId: ScenarioId) => {
+    setSelectedScenarioId(scenarioId);
+    setIntakeConfig((prev) => ({ ...prev, selectedScenarioId: scenarioId }));
   };
 
   const handleRecordExchange = (exchange: SessionExchange) => {
@@ -69,6 +77,7 @@ export default function App() {
   const handleResetDemo = () => {
     setCurrentScreen('title');
     setDifficulty('easy');
+    setSelectedScenarioId('job-interview');
   };
 
   return (
@@ -114,6 +123,24 @@ export default function App() {
             </motion.div>
           )}
 
+          {currentScreen === 'scenario-select' && (
+            <motion.div
+              key="scenario-select"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="w-full flex-1"
+            >
+              <ScenarioSelectScreen
+                intakeConfig={intakeConfig}
+                selectedScenarioId={selectedScenarioId}
+                onSelectScenario={handleSelectScenario}
+                onProceedToWaitingRoom={() => setCurrentScreen('waiting-room')}
+              />
+            </motion.div>
+          )}
+
           {currentScreen === 'waiting-room' && (
             <motion.div
               key="waiting-room"
@@ -133,7 +160,7 @@ export default function App() {
 
           {currentScreen === 'interview' && (
             <motion.div
-              key="interview"
+              key={`interview-${selectedScenarioId}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -141,6 +168,7 @@ export default function App() {
               className="w-full flex-1"
             >
               <InterviewScreen
+                scenarioId={selectedScenarioId}
                 difficulty={difficulty}
                 onSelectDifficulty={(newDiff) => setDifficulty(newDiff)}
                 onRecordExchange={handleRecordExchange}

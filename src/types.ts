@@ -1,12 +1,33 @@
-export type ScreenType = 'title' | 'intake' | 'waiting-room' | 'interview' | 'therapist-dashboard' | 'debrief';
+export type ScreenType = 'title' | 'intake' | 'scenario-select' | 'waiting-room' | 'interview' | 'therapist-dashboard' | 'debrief';
 
 export type DifficultyLevel = 'easy' | 'moderate' | 'hard';
+
+export type ScenarioId = 
+  | 'job-interview'
+  | 'restaurant-ordering'
+  | 'conflict-conversation'
+  | 'doctors-appointment'
+  | 'phone-call'
+  | 'store-help'
+  | 'small-talk';
+
+export interface ScenarioDefinition {
+  id: ScenarioId;
+  title: string;
+  description: string;
+  status: 'playable' | 'coming-soon';
+  categoryTag: string;
+  roleLabel: string;
+  npcName: string;
+  iconType: string;
+}
 
 export interface IntakeConfig {
   participantName: string;
   sessionGoal: string;
   startingDifficulty: DifficultyLevel;
   clinicalNotes: string;
+  selectedScenarioId: ScenarioId;
 }
 
 export interface ResponseOption {
@@ -31,6 +52,8 @@ export interface DifficultyScenario {
 export interface SessionExchange {
   id: string;
   timestamp: string;
+  scenarioId?: ScenarioId;
+  scenarioTitle?: string;
   difficulty: DifficultyLevel;
   question: string;
   userResponseLabel: string;

@@ -128,31 +128,36 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({ onStartDemo }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.55 }}
-          className="mt-10 pt-6 border-t border-[#028090]/30 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-[#99F6E4]/70"
+          className="mt-10 pt-6 border-t border-[#028090]/30 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-[#99F6E4]/70"
         >
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#02C39A]"></span>
-            <span>1. Intake Setup</span>
-          </div>
-          <span className="text-[#028090]">&rarr;</span>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#00A896]"></span>
-            <span>2. Sensory Lobby</span>
-          </div>
-          <span className="text-[#028090]">&rarr;</span>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#028090]"></span>
-            <span>3. VR Rehearsal</span>
+            <span>1. Intake</span>
           </div>
           <span className="text-[#028090]">&rarr;</span>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#5EEAD4]"></span>
-            <span>4. Clinician Hub</span>
+            <span>2. Scenarios</span>
+          </div>
+          <span className="text-[#028090]">&rarr;</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#00A896]"></span>
+            <span>3. Waiting Room</span>
+          </div>
+          <span className="text-[#028090]">&rarr;</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#028090]"></span>
+            <span>4. VR Rehearsal</span>
+          </div>
+          <span className="text-[#028090]">&rarr;</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#5EEAD4]"></span>
+            <span>5. Clinician Hub</span>
           </div>
           <span className="text-[#028090]">&rarr;</span>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#F4A261]"></span>
-            <span>5. Debrief Summary</span>
+            <span>6. Debrief</span>
           </div>
         </motion.div>
       </div>

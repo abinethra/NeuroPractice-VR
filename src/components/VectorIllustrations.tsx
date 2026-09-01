@@ -419,3 +419,299 @@ export const InterviewRoomIllustration: React.FC<{
     </div>
   );
 };
+
+// RESTAURANT ORDERING SCENE ILLUSTRATION
+export const RestaurantRoomIllustration: React.FC<{
+  isSpeaking?: boolean;
+  isThumbnail?: boolean;
+  className?: string;
+}> = ({ isSpeaking = false, isThumbnail = false, className = '' }) => {
+  return (
+    <div className={`relative w-full h-full rounded-2xl overflow-hidden shadow-2xl bg-[#022A2E] ${className}`}>
+      <svg
+        viewBox="0 0 800 500"
+        className="w-full h-full"
+        preserveAspectRatio="xMidYMid slice"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="cafeWall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#04383E" />
+            <stop offset="100%" stopColor="#02272B" />
+          </linearGradient>
+
+          <linearGradient id="warmLampGlow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FEF08A" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#FEF08A" stopOpacity="0.0" />
+          </linearGradient>
+
+          <linearGradient id="cafeTableTop" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0F766E" />
+            <stop offset="100%" stopColor="#0D5F59" />
+          </linearGradient>
+
+          <linearGradient id="menuGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#92400E" />
+            <stop offset="100%" stopColor="#78350F" />
+          </linearGradient>
+        </defs>
+
+        {/* Cafe Back Wall */}
+        <rect x="0" y="0" width="800" height="380" fill="url(#cafeWall)" />
+
+        {/* Ambient Warm Pendant Lamp Light Cone */}
+        <polygon points="400,0 260,340 540,340" fill="url(#warmLampGlow)" />
+        <line x1="400" y1="0" x2="400" y2="55" stroke="#94A3B8" strokeWidth="2.5" />
+        <ellipse cx="400" cy="58" rx="28" ry="10" fill="#024F57" stroke="#00A896" strokeWidth="2" />
+        <circle cx="400" cy="62" r="8" fill="#FEF08A" />
+
+        {/* Cafe Menu Chalkboard in Background */}
+        <g id="chalkboard">
+          <rect x="520" y="55" width="220" height="170" rx="10" fill="#032124" stroke="#028090" strokeWidth="3" />
+          <rect x="530" y="65" width="200" height="150" rx="6" fill="#021719" />
+          <text x="630" y="90" fill="#5EEAD4" fontSize="13" fontWeight="bold" textAnchor="middle" letterSpacing="2">
+            DAILY SPECIALS
+          </text>
+          <line x1="560" y1="100" x2="700" y2="100" stroke="#028090" strokeWidth="1.5" strokeDasharray="3,3" />
+          <rect x="550" y="115" width="100" height="5" rx="2.5" fill="#99F6E4" fillOpacity="0.5" />
+          <rect x="670" y="115" width="40" height="5" rx="2.5" fill="#FEF08A" fillOpacity="0.6" />
+          <rect x="550" y="132" width="115" height="5" rx="2.5" fill="#99F6E4" fillOpacity="0.5" />
+          <rect x="670" y="132" width="40" height="5" rx="2.5" fill="#FEF08A" fillOpacity="0.6" />
+          <rect x="550" y="150" width="85" height="5" rx="2.5" fill="#99F6E4" fillOpacity="0.5" />
+          <rect x="670" y="150" width="40" height="5" rx="2.5" fill="#FEF08A" fillOpacity="0.6" />
+        </g>
+
+        {/* Left Side Ambient Coffee Machine Counter */}
+        <g id="espresso-counter">
+          <rect x="60" y="180" width="160" height="160" rx="8" fill="#032D31" stroke="#028090" strokeWidth="2" />
+          {/* Coffee Cups on Rack */}
+          <ellipse cx="100" cy="172" rx="12" ry="5" fill="#CCFBF1" />
+          <rect x="90" y="172" width="20" height="14" rx="3" fill="#CCFBF1" />
+          <ellipse cx="140" cy="172" rx="12" ry="5" fill="#CCFBF1" />
+          <rect x="130" y="172" width="20" height="14" rx="3" fill="#CCFBF1" />
+          <ellipse cx="180" cy="172" rx="12" ry="5" fill="#CCFBF1" />
+          <rect x="170" y="172" width="20" height="14" rx="3" fill="#CCFBF1" />
+          {/* Steam puffs */}
+          <circle cx="100" cy="155" r="4" fill="#E2E8F0" fillOpacity="0.3" />
+          <circle cx="140" cy="150" r="5" fill="#E2E8F0" fillOpacity="0.4" />
+        </g>
+
+        {/* SERVER NPC AVATAR (Warm, Friendly, Apron) */}
+        <g id="server-avatar" transform="translate(320, 105)">
+          {/* Speaking pulse */}
+          {isSpeaking && (
+            <circle cx="80" cy="65" r="46" fill="#02C39A" fillOpacity="0.18">
+              <animate attributeName="r" values="40;52;40" dur="2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.3;0.05;0.3" dur="2s" repeatCount="indefinite" />
+            </circle>
+          )}
+
+          {/* Head (Circle style matching design guidelines) */}
+          <circle cx="80" cy="65" r="34" fill={COLORS.npcTone} />
+
+          {/* Attentive, friendly eye guideline */}
+          <rect x="68" y="62" width="24" height="4" rx="2" fill="#0F766E" fillOpacity="0.75" />
+
+          {/* Neck */}
+          <rect x="72" y="96" width="16" height="16" rx="4" fill={COLORS.npcTone} />
+
+          {/* Server Shirt & Dark Apron */}
+          <path
+            d="M 32 195 C 32 120, 50 108, 80 108 C 110 108, 128 120, 128 195 Z"
+            fill="#0F766E"
+          />
+
+          {/* Dark Bistro Apron */}
+          <path
+            d="M 52 140 L 108 140 L 114 195 L 46 195 Z"
+            fill="#032724"
+          />
+          {/* Apron Straps */}
+          <line x1="56" y1="140" x2="68" y2="108" stroke="#032724" strokeWidth="4" />
+          <line x1="104" y1="140" x2="92" y2="108" stroke="#032724" strokeWidth="4" />
+
+          {/* White Name Tag */}
+          <rect x="86" y="148" width="18" height="8" rx="2" fill="#FFFFFF" />
+          <rect x="88" y="151" width="14" height="2" rx="1" fill="#0D9488" />
+
+          {/* Server Order Pad in Hand */}
+          <g transform="translate(110, 150)">
+            <rect x="0" y="0" width="22" height="32" rx="3" fill="#1E293B" stroke="#94A3B8" strokeWidth="1" />
+            <rect x="3" y="4" width="16" height="24" rx="2" fill="#FEF3C7" />
+            <line x1="6" y1="8" x2="16" y2="8" stroke="#475569" strokeWidth="1" />
+            <line x1="6" y1="13" x2="16" y2="13" stroke="#475569" strokeWidth="1" />
+            <line x1="6" y1="18" x2="14" y2="18" stroke="#475569" strokeWidth="1" />
+            {/* Pen */}
+            <line x1="18" y1="2" x2="24" y2="14" stroke="#028090" strokeWidth="2" strokeLinecap="round" />
+          </g>
+        </g>
+
+        {/* Floor */}
+        <polygon points="0,380 800,380 800,500 0,500" fill="#021C1E" />
+        <line x1="0" y1="380" x2="800" y2="380" stroke="#00A896" strokeWidth="2" strokeOpacity="0.4" />
+
+        {/* RESTAURANT TABLE */}
+        <g id="dining-table">
+          {/* Table Pedestal / Base */}
+          <polygon points="260,345 540,345 580,480 220,480" fill="#042C28" stroke="#024F57" strokeWidth="2" />
+
+          {/* Table Surface */}
+          <polygon points="90,305 710,305 740,345 60,345" fill="url(#cafeTableTop)" stroke="#2DD4BF" strokeWidth="2.5" />
+
+          {/* Menu Booklet on Table */}
+          <g id="table-menu" transform="translate(480, 275)">
+            <polygon points="15,8 90,0 100,50 20,55" fill="url(#menuGrad)" stroke="#B45309" strokeWidth="1.5" />
+            <polygon points="20,12 85,5 92,46 25,50" fill="#FFFBEB" />
+            <text x="54" y="32" fill="#78350F" fontSize="10" fontWeight="bold" textAnchor="middle">MENU</text>
+            <line x1="32" y1="38" x2="76" y2="38" stroke="#D97706" strokeWidth="1" />
+          </g>
+
+          {/* Tall Water Glass with Lemon Slice */}
+          <g id="table-water-glass" transform="translate(230, 290)">
+            <polygon points="4,0 20,0 18,32 6,32" fill="#E0F2FE" fillOpacity="0.65" stroke="#BAE6FD" strokeWidth="1.5" />
+            <polygon points="6,8 18,8 17,30 7,30" fill="#38BDF8" fillOpacity="0.45" />
+            {/* Ice Cubes */}
+            <rect x="8" y="14" width="6" height="6" fill="#FFFFFF" fillOpacity="0.8" rx="1" />
+            <rect x="11" y="22" width="5" height="5" fill="#FFFFFF" fillOpacity="0.8" rx="1" />
+            {/* Lemon wedge on rim */}
+            <circle cx="5" cy="2" r="5" fill="#FDE047" stroke="#EAB308" strokeWidth="1" />
+          </g>
+
+          {/* Fork, Knife & Folded Napkin */}
+          <g id="cutlery" transform="translate(160, 315)">
+            <rect x="0" y="0" width="30" height="20" rx="3" fill="#F1F5F9" stroke="#CBD5E1" strokeWidth="1" />
+            {/* Fork */}
+            <line x1="8" y1="3" x2="8" y2="17" stroke="#64748B" strokeWidth="1.5" />
+            {/* Knife */}
+            <line x1="22" y1="3" x2="22" y2="17" stroke="#64748B" strokeWidth="1.5" />
+          </g>
+
+          {/* Condiment Shakers (Salt & Pepper) */}
+          <g id="shakers" transform="translate(380, 295)">
+            {/* Salt */}
+            <rect x="0" y="5" width="12" height="18" rx="3" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="1" />
+            <rect x="2" y="2" width="8" height="4" rx="1" fill="#64748B" />
+            {/* Pepper */}
+            <rect x="16" y="5" width="12" height="18" rx="3" fill="#334155" stroke="#64748B" strokeWidth="1" />
+            <rect x="18" y="2" width="8" height="4" rx="1" fill="#94A3B8" />
+          </g>
+        </g>
+
+        {/* Live Speaking Indicator */}
+        {isSpeaking && !isThumbnail && (
+          <g id="speaking-visualizer" transform="translate(400, 75)">
+            <rect x="-30" y="-12" width="60" height="24" rx="12" fill="#042F33" fillOpacity="0.85" stroke="#02C39A" strokeWidth="1.5" />
+            <circle cx="-16" cy="0" r="3" fill="#02C39A">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="0" cy="0" r="4" fill="#00A896">
+              <animate attributeName="opacity" values="1;0.3;1" dur="0.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="16" cy="0" r="3" fill="#02C39A">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="0.8s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+};
+
+// SCENARIO CARD AVATAR / BADGE ILLUSTRATION (Flat circle-avatar style)
+export const ScenarioAvatarIllustration: React.FC<{
+  iconType: string;
+  className?: string;
+  size?: number;
+}> = ({ iconType, className = '', size = 56 }) => {
+  return (
+    <div 
+      className={`relative rounded-full flex items-center justify-center shrink-0 shadow-md ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <svg
+        viewBox="0 0 100 100"
+        className="w-full h-full"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="avatarCircleBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#043C42" />
+            <stop offset="100%" stopColor="#02272B" />
+          </linearGradient>
+        </defs>
+
+        {/* Outer Circle Container */}
+        <circle cx="50" cy="50" r="48" fill="url(#avatarCircleBg)" stroke="#028090" strokeWidth="2.5" />
+
+        {/* Subtle inner tone glow */}
+        <circle cx="50" cy="50" r="40" fill="#02C39A" fillOpacity="0.08" />
+
+        {/* Flat Minimalist Avatar Head + Torso Silhouette Base */}
+        <circle cx="50" cy="38" r="15" fill="#99F6E4" />
+        <path
+          d="M 26 82 C 26 62, 36 56, 50 56 C 64 56, 74 62, 74 82 Z"
+          fill="#0F766E"
+        />
+
+        {/* Custom Icon Overlay / Prop corresponding to scenario archetype */}
+        {iconType === 'briefcase' && (
+          <g transform="translate(36, 62)">
+            <rect x="0" y="4" width="28" height="18" rx="3" fill="#02C39A" />
+            <path d="M 8 4 L 8 1 L 20 1 L 20 4" stroke="#CCFBF1" strokeWidth="1.5" fill="none" />
+            <line x1="14" y1="10" x2="14" y2="15" stroke="#022F33" strokeWidth="2" />
+          </g>
+        )}
+
+        {iconType === 'utensils' && (
+          <g transform="translate(36, 60)">
+            {/* Apron bib & fork/spoon badge */}
+            <polygon points="6,0 22,0 26,22 2,22" fill="#02C39A" />
+            <circle cx="14" cy="8" r="3" fill="#022F33" />
+            <line x1="10" y1="12" x2="18" y2="12" stroke="#022F33" strokeWidth="1.5" />
+          </g>
+        )}
+
+        {iconType === 'shield-alert' && (
+          <g transform="translate(38, 62)">
+            <path d="M 12 0 L 24 4 L 24 14 C 24 20, 12 24, 12 24 C 12 24, 0 20, 0 14 L 0 4 Z" fill="#F4A261" />
+            <line x1="12" y1="6" x2="12" y2="14" stroke="#0F172A" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="12" cy="18" r="1.5" fill="#0F172A" />
+          </g>
+        )}
+
+        {iconType === 'stethoscope' && (
+          <g transform="translate(38, 60)">
+            <rect x="0" y="4" width="24" height="18" rx="4" fill="#028090" />
+            <line x1="12" y1="8" x2="12" y2="18" stroke="#CCFBF1" strokeWidth="2.5" strokeLinecap="round" />
+            <line x1="7" y1="13" x2="17" y2="13" stroke="#CCFBF1" strokeWidth="2.5" strokeLinecap="round" />
+          </g>
+        )}
+
+        {iconType === 'phone-call' && (
+          <g transform="translate(38, 62)">
+            <circle cx="12" cy="12" r="11" fill="#00A896" />
+            <path d="M 7 9 C 7 14, 10 17, 15 17 L 17 15 L 14 12 L 13 13 C 11 12, 10 11, 9 9 L 10 8 L 7 5 Z" fill="#022F33" />
+          </g>
+        )}
+
+        {iconType === 'shopping-bag' && (
+          <g transform="translate(38, 60)">
+            <rect x="2" y="6" width="20" height="18" rx="2" fill="#02C39A" />
+            <path d="M 7 6 C 7 1, 17 1, 17 6" stroke="#CCFBF1" strokeWidth="2" fill="none" />
+            <line x1="8" y1="12" x2="16" y2="12" stroke="#022F33" strokeWidth="1.5" />
+          </g>
+        )}
+
+        {iconType === 'coffee' && (
+          <g transform="translate(38, 60)">
+            <rect x="2" y="6" width="18" height="16" rx="3" fill="#F4A261" />
+            <path d="M 20 9 C 24 9, 24 17, 20 17" stroke="#F4A261" strokeWidth="2" fill="none" />
+            <path d="M 6 2 Q 8 4 6 6" stroke="#FEF3C7" strokeWidth="1.2" fill="none" />
+            <path d="M 12 2 Q 14 4 12 6" stroke="#FEF3C7" strokeWidth="1.2" fill="none" />
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+};
+

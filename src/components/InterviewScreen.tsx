@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { InterviewRoomIllustration } from './VectorIllustrations';
-import { DifficultyLevel, ResponseOption, SessionExchange } from '../types';
-import { INTERVIEW_SCENARIOS, DIFFICULTY_PALETTE } from '../data/interviewScenarios';
+import { InterviewRoomIllustration, RestaurantRoomIllustration } from './VectorIllustrations';
+import { DifficultyLevel, ResponseOption, ScenarioId, SessionExchange } from '../types';
+import { getScenarioData, DIFFICULTY_PALETTE, SCENARIO_CATALOG } from '../data/interviewScenarios';
 import { 
   Sparkles, ArrowRight, MessageSquare, CheckCircle2, RotateCcw, 
-  Award, HeartHandshake, Briefcase, Zap, HelpCircle, Clock
+  Award, HeartHandshake, Briefcase, Zap, HelpCircle, Clock,
+  UtensilsCrossed, Compass
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { playSoftChime } from '../utils/audio';
 
 interface InterviewScreenProps {
+  scenarioId?: ScenarioId;
   difficulty: DifficultyLevel;
   onSelectDifficulty: (difficulty: DifficultyLevel) => void;
   onRecordExchange: (exchange: SessionExchange) => void;
@@ -17,12 +19,16 @@ interface InterviewScreenProps {
 }
 
 export const InterviewScreen: React.FC<InterviewScreenProps> = ({
+  scenarioId,
   difficulty,
   onSelectDifficulty,
   onRecordExchange,
   onContinueToDashboard,
 }) => {
-  const currentScenario = INTERVIEW_SCENARIOS[difficulty] || INTERVIEW_SCENARIOS.easy;
+  const safeScenarioId: ScenarioId = scenarioId || 'job-interview';
+  const currentScenario = getScenarioData(safeScenarioId, difficulty);
+  const scenarioMeta = SCENARIO_CATALOG.find((s) => s.id === safeScenarioId) || SCENARIO_CATALOG[0];
+
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [activeNpcReply, setActiveNpcReply] = useState<string | null>(null);
   const [isSpeakingAnimation, setIsSpeakingAnimation] = useState<boolean>(false);
@@ -48,6 +54,8 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
       const exchange: SessionExchange = {
         id: `exch-${Date.now()}`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        scenarioId: safeScenarioId,
+        scenarioTitle: scenarioMeta.title,
         difficulty: difficulty,
         question: currentScenario.question,
         userResponseLabel: option.label,
@@ -55,6 +63,7 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
         npcReply: option.npcReply,
         clinicianNotes: option.clinicianNotes,
         skillsDemonstrated: option.skillsDemonstrated,
+        appropriateScore: option.appropriateScore,
       };
       onRecordExchange(exchange);
     }, 450);
@@ -76,12 +85,22 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
       <div className="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#02C39A]">
-            <span>Screen 3 of 4</span>
+            <span>Screen 4 of 6</span>
             <span>&bull;</span>
-            <span>VR Interactive Interview</span>
+            <span>VR Interactive Simulation ({scenarioMeta.title})</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Branching Rehearsal Scenario
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
+            {scenarioId === 'restaurant-ordering' ? (
+              <>
+                <UtensilsCrossed className="w-6 h-6 text-[#02C39A]" />
+                <span>Restaurant Ordering Rehearsal</span>
+              </>
+            ) : (
+              <>
+                <Briefcase className="w-6 h-6 text-[#02C39A]" />
+                <span>Branching Job Interview Rehearsal</span>
+              </>
+            )}
           </h2>
         </div>
 
@@ -100,64 +119,67 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
               className="w-2.5 h-2.5 rounded-full shadow-sm animate-pulse shrink-0" 
               style={{ backgroundColor: activeDotColor }}
             />
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <span>Active:</span>
-              <span style={{ color: activeDotColor }}>
-                {difficulty === 'easy' && 'Easy (Warm & Supportive)'}
-                {difficulty === 'moderate' && 'Moderate (Neutral / Shorter)'}
-                {difficulty === 'hard' && 'Hard (Rapid Follow-Up)'}
-              </span>
+            <span 
+              className="text-xs font-extrabold tracking-wide uppercase"
+              style={{ color: activeDotColor }}
+            >
+              {difficulty} Mode
             </span>
           </div>
 
-          {/* Difficulty Level Tabs */}
-          <div className="flex items-center gap-1 bg-[#032A2E] p-1 rounded-xl border border-[#028090]/50">
-            {(['easy', 'moderate', 'hard'] as DifficultyLevel[]).map((level) => {
-              const isSelected = difficulty === level;
-              const levelDotColor = DIFFICULTY_PALETTE[level];
-              const levelLabels = {
-                easy: 'Easy',
-                moderate: 'Moderate',
-                hard: 'Hard'
-              };
-
-              return (
-                <button
-                  key={level}
-                  id={`diff-btn-${level}`}
-                  onClick={() => handleDifficultyChange(level)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                    isSelected
-                      ? 'text-[#022F33] shadow-md'
-                      : 'text-[#CCFBF1] hover:bg-[#044850] hover:text-white'
-                  }`}
-                  style={{
-                    backgroundColor: isSelected ? levelDotColor : 'transparent',
-                    color: isSelected ? (level === 'hard' ? '#0F172A' : '#022F33') : undefined
-                  }}
-                >
-                  <span 
-                    className={`w-2 h-2 rounded-full shrink-0 ${isSelected ? 'ring-1 ring-black/30' : ''}`}
-                    style={{ backgroundColor: levelDotColor }}
-                  />
-                  <span>{levelLabels[level]}</span>
-                </button>
-              );
-            })}
+          {/* Difficulty Switcher Tabs */}
+          <div className="flex items-center bg-[#022A2E] p-1 rounded-xl border border-[#028090]/40 text-xs">
+            <button
+              onClick={() => handleDifficultyChange('easy')}
+              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                difficulty === 'easy'
+                  ? 'bg-[#02C39A] text-[#022F33] shadow-md'
+                  : 'text-[#99F6E4] hover:text-white'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#02C39A]" />
+              <span>Easy</span>
+            </button>
+            <button
+              onClick={() => handleDifficultyChange('moderate')}
+              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                difficulty === 'moderate'
+                  ? 'bg-[#028090] text-white shadow-md'
+                  : 'text-[#99F6E4] hover:text-white'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#028090]" />
+              <span>Moderate</span>
+            </button>
+            <button
+              onClick={() => handleDifficultyChange('hard')}
+              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                difficulty === 'hard'
+                  ? 'bg-[#F4A261] text-[#0F172A] shadow-md'
+                  : 'text-[#99F6E4] hover:text-white'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F4A261]" />
+              <span>Hard</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Visual Rehearsal Stage: NPC behind desk + Speech Bubble */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center flex-1">
-        {/* Left/Top: Illustrated NPC & Office Scene (CSS/SVG) */}
-        <motion.div
+      {/* Main Interactive Stage Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch my-auto">
+        {/* Left: NPC Stage Scene (Desk / Restaurant) */}
+        <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.35 }}
-          className="lg:col-span-5 h-[220px] sm:h-[260px] lg:h-[340px] rounded-2xl overflow-hidden shadow-2xl border border-[#028090]/40 relative"
+          transition={{ duration: 0.4 }}
+          className="lg:col-span-5 aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto min-h-[260px] lg:min-h-[340px] relative rounded-3xl overflow-hidden border-2 border-[#028090]/50 shadow-2xl"
         >
-          <InterviewRoomIllustration isSpeaking={isSpeakingAnimation || !!activeNpcReply} />
+          {scenarioId === 'restaurant-ordering' ? (
+            <RestaurantRoomIllustration isSpeaking={isSpeakingAnimation} className="h-full" />
+          ) : (
+            <InterviewRoomIllustration isSpeaking={isSpeakingAnimation} className="h-full" />
+          )}
           
           {/* NPC Status & Tone Overlay */}
           <div className="absolute bottom-3 left-3 bg-[#022427]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#028090]/40 text-xs text-[#CCFBF1] flex items-center gap-2 shadow-lg">
@@ -166,34 +188,36 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
               style={{ backgroundColor: activeDotColor }}
             />
             <div className="flex flex-col">
-              <span className="font-semibold text-white">Alex &bull; Interviewer</span>
+              <span className="font-semibold text-white">
+                {scenarioMeta.npcName} &bull; {scenarioMeta.roleLabel}
+              </span>
               <span className="text-[10px]" style={{ color: activeDotColor }}>
                 Tone: {currentScenario.npcTone}
               </span>
             </div>
           </div>
 
-          {/* Hard mode interruption alert badge */}
+          {/* Hard mode alert badge */}
           {difficulty === 'hard' && (
             <div className="absolute top-3 right-3 bg-[#F4A261]/20 border border-[#F4A261] px-2.5 py-1 rounded-lg text-[11px] font-bold text-[#F4A261] backdrop-blur-md flex items-center gap-1.5 animate-pulse">
               <Zap className="w-3.5 h-3.5" />
-              <span>Rapid Follow-Up Mode</span>
+              <span>{scenarioId === 'restaurant-ordering' ? 'Order Mix-Up Mode' : 'Rapid Follow-Up Mode'}</span>
             </div>
           )}
         </motion.div>
 
-        {/* Right: Dialogue Speech Bubble & NPC Follow-up (White Cards with generous rounded corners) */}
+        {/* Right: Dialogue Speech Bubble & NPC Follow-up */}
         <div className="lg:col-span-7 flex flex-col gap-3">
-          {/* Interviewer Speech Bubble */}
+          {/* NPC Speech Bubble */}
           <motion.div
-            key={difficulty}
+            key={`${scenarioId}-${difficulty}`}
             initial={{ opacity: 0, x: 15 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.35 }}
             className="relative bg-white text-[#0F172A] rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl border-2"
             style={{ borderColor: activeDotColor }}
           >
-            {/* Speech bubble tail pointing toward avatar */}
+            {/* Speech bubble tail */}
             <div className="hidden lg:block absolute -left-3 top-10 w-0 h-0 border-t-8 border-t-transparent border-r-[14px] border-r-white border-b-8 border-b-transparent"></div>
 
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5 pb-2 border-b border-slate-100">
@@ -207,7 +231,7 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
                   style={{ color: difficulty === 'hard' ? '#D97706' : (difficulty === 'moderate' ? '#028090' : '#0D9488') }}
                 >
                   {getDifficultyIcon()}
-                  <span>Interviewer Prompt ({difficulty.toUpperCase()})</span>
+                  <span>{scenarioMeta.roleLabel} Prompt ({difficulty.toUpperCase()})</span>
                 </span>
               </div>
               
@@ -223,7 +247,7 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
             {/* Core Question Text or Follow-up Reply */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeNpcReply ? 'reply' : `${difficulty}-question`}
+                key={activeNpcReply ? 'reply' : `${scenarioId}-${difficulty}-question`}
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
@@ -255,12 +279,12 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
             )}
           </motion.div>
 
-          {/* Social Cue Helper Hint / Context pill with active difficulty tone explanation */}
+          {/* Social Cue Helper Hint / Context pill */}
           <div className="bg-[#03343A] rounded-xl px-4 py-2.5 border border-[#028090]/40 flex items-center justify-between text-xs text-[#99F6E4]">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#02C39A] shrink-0" />
               <span>
-                <strong>NPC Behavioral Dynamic:</strong> {currentScenario.npcToneDescription}
+                <strong>NPC Dynamic:</strong> {currentScenario.npcToneDescription}
               </span>
             </div>
           </div>
@@ -282,7 +306,7 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {currentScenario.options.map((option, idx) => {
             const isSelected = selectedOptionId === option.id;
-            const isAskForTimeOption = option.id === 'hard-opt-1';
+            const isAskForTimeOption = option.id.includes('hard-opt-1') || option.id.includes('rest-hard-opt-2');
 
             return (
               <motion.button
@@ -363,7 +387,7 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
               <div>
                 <h4 className="text-white font-bold text-sm">Response Successfully Logged</h4>
                 <p className="text-xs text-[#99F6E4]/90">
-                  Appropriateness Score: <strong>{selectedOptionObj?.appropriateScore || 9}/10</strong> &bull; Telemetry synced with Clinician Supervision Hub.
+                  Appropriateness Score: <strong>{selectedOptionObj?.appropriateScore || 10}/10</strong> &bull; Telemetry synced with Clinician Supervision Hub.
                 </p>
               </div>
             </div>
@@ -387,4 +411,3 @@ export const InterviewScreen: React.FC<InterviewScreenProps> = ({
     </div>
   );
 };
-

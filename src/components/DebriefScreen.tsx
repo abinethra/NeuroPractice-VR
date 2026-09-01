@@ -1,9 +1,10 @@
 import React from 'react';
-import { DifficultyLevel, IntakeConfig, SessionExchange } from '../types';
-import { DIFFICULTY_PALETTE, INTERVIEW_SCENARIOS } from '../data/interviewScenarios';
+import { DifficultyLevel, IntakeConfig, ScenarioId, SessionExchange } from '../types';
+import { DIFFICULTY_PALETTE, getScenarioData, SCENARIO_CATALOG } from '../data/interviewScenarios';
 import { 
   Award, CheckCircle2, AlertTriangle, Target, RotateCcw, Download,
-  Sparkles, FileText, User, Activity, Clock, ShieldCheck, ArrowRight
+  Sparkles, FileText, User, Activity, Clock, ShieldCheck, ArrowRight,
+  UtensilsCrossed, Briefcase
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { downloadOfflineHtml } from '../utils/offlineHtmlGenerator';
@@ -21,14 +22,38 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
   lastExchange,
   onRestartDemo,
 }) => {
-  const currentScenario = INTERVIEW_SCENARIOS[difficulty] || INTERVIEW_SCENARIOS.easy;
+  const activeScenarioId: ScenarioId = lastExchange?.scenarioId || intakeConfig.selectedScenarioId || 'job-interview';
+  const scenarioMeta = SCENARIO_CATALOG.find((s) => s.id === activeScenarioId) || SCENARIO_CATALOG[0];
+  const currentScenario = getScenarioData(activeScenarioId, difficulty);
   const activeDotColor = DIFFICULTY_PALETTE[difficulty] || '#02C39A';
 
   // Calculate score (out of 10)
   const score = lastExchange?.appropriateScore || (difficulty === 'hard' ? 10 : 9);
   
-  // Auto-generate clinical debrief notes based on difficulty and exchange
+  // Auto-generate clinical debrief notes based on scenario, difficulty, and exchange
   const generateDebriefNotes = (): string[] => {
+    if (activeScenarioId === 'restaurant-ordering') {
+      if (difficulty === 'hard') {
+        return [
+          'Handled the kitchen order mix-up calmly with factual clarification and zero distress escalation.',
+          'Took extra time on response formulation (+4.2s pause) — discuss pacing and self-advocacy strategies.',
+          'Demonstrated high cognitive flexibility when evaluating menu alternatives under service pressure.'
+        ];
+      }
+      if (difficulty === 'moderate') {
+        return [
+          'Successfully filtered ambient background restaurant chatter and maintained direct ordering syntax.',
+          'Assertively requested menu item clarification when auditory volume increased.',
+          'Maintained steady social composure while requesting dietary substitutions.'
+        ];
+      }
+      return [
+        'Exhibited clear dietary self-advocacy and calm inquiry regarding ingredients.',
+        'Successfully requested extra cognitive processing time to review the menu without feeling rushed.',
+        'Maintained structured, polite communication syntax with the server avatar.'
+      ];
+    }
+
     if (difficulty === 'hard') {
       return [
         'Handled the rapid interruption and follow-up challenge with high executive maturity.',
@@ -58,7 +83,7 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
       {/* Top Header Badge */}
       <div className="mb-4">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#02C39A] mb-1">
-          <span>Screen 5 of 5</span>
+          <span>Screen 6 of 6</span>
           <span>&bull;</span>
           <span>Post-Session Clinical Debrief</span>
         </div>
@@ -84,7 +109,7 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
             <span className="font-bold text-white uppercase tracking-wider">Clinical Rehearsal Report</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-slate-400">Participant: {intakeConfig.participantName || 'Jordan M.'}</span>
+            <span className="font-mono text-slate-400">Participant: {intakeConfig.participantName || 'Rahul K.'}</span>
             <span className="px-2.5 py-0.5 rounded-full bg-[#02C39A]/20 text-[#5EEAD4] border border-[#02C39A]/40 font-mono text-[11px]">
               STATUS: COMPLETED
             </span>
@@ -111,11 +136,15 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
           <div className="bg-[#032A2E] rounded-2xl p-4 border border-[#028090]/40 flex flex-col justify-between">
             <div className="flex items-center justify-between text-xs text-[#99F6E4]/70 mb-1.5">
               <span className="font-semibold uppercase tracking-wider">Scenario</span>
-              <FileText className="w-4 h-4 text-[#028090]" />
+              {activeScenarioId === 'restaurant-ordering' ? (
+                <UtensilsCrossed className="w-4 h-4 text-[#02C39A]" />
+              ) : (
+                <Briefcase className="w-4 h-4 text-[#028090]" />
+              )}
             </div>
             <div>
               <div className="text-sm font-bold text-white leading-snug">
-                {currentScenario.scenarioTitle}
+                {scenarioMeta.title}
               </div>
               <div className="text-[11px] font-bold mt-1 flex items-center gap-1.5" style={{ color: activeDotColor }}>
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeDotColor }} />
@@ -123,7 +152,7 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
               </div>
             </div>
             <div className="mt-2 text-[10px] text-[#99F6E4]/70">
-              Workplace Behavioral Interview
+              {currentScenario.scenarioTitle}
             </div>
           </div>
 
@@ -141,85 +170,70 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
             </div>
           </div>
 
-          {/* Tile 4: Score out of 10 */}
-          <div className="bg-[#032A2E] rounded-2xl p-4 border border-[#02C39A]/40 flex flex-col justify-between">
+          {/* Tile 4: Simple Score */}
+          <div className="bg-[#032A2E] rounded-2xl p-4 border border-[#02C39A]/50 flex flex-col justify-between">
             <div className="flex items-center justify-between text-xs text-[#02C39A] mb-1.5">
-              <span className="font-semibold uppercase tracking-wider">Appropriate Score</span>
+              <span className="font-semibold uppercase tracking-wider">Performance Score</span>
               <Award className="w-4 h-4 text-[#02C39A]" />
             </div>
-            <div className="text-2xl font-extrabold text-white flex items-baseline gap-1">
-              <span className="text-[#02C39A]">{score}</span>
-              <span className="text-sm text-slate-400 font-normal">/ 10</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-3xl font-black text-white">{score}</span>
+              <span className="text-sm font-bold text-[#5EEAD4]">/ 10</span>
             </div>
-            <div className="mt-2 text-[10px] text-[#5EEAD4] font-bold">
-              High Social Competence
+            <div className="mt-2 text-[10px] text-[#02C39A] font-bold">
+              High Social Appropriateness
             </div>
           </div>
         </div>
 
-        {/* Auto-Generated Clinician Notes Section */}
-        <div className="bg-white text-slate-800 rounded-2xl p-5 shadow-lg border border-slate-100 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#028090]" />
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#028090]">
-                Auto-Generated Clinical Debrief Notes
-              </h3>
-            </div>
-            <span className="text-[11px] text-slate-400 font-medium">Session Evaluation</span>
+        {/* Clinical Auto-Generated Debrief Notes */}
+        <div className="bg-[#022427] rounded-2xl p-5 border border-[#028090]/40">
+          <div className="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider text-[#5EEAD4]">
+            <Sparkles className="w-4 h-4 text-[#02C39A]" />
+            <span>Auto-Generated Clinical Discussion Notes</span>
           </div>
 
           <div className="space-y-2.5">
-            {debriefNotes.map((note, idx) => (
-              <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <CheckCircle2 className="w-4 h-4 text-[#02C39A] shrink-0 mt-0.5" />
-                <span className="leading-relaxed">{note}</span>
+            {debriefNotes.map((note, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-3 bg-[#032A2E] p-3 rounded-xl border border-[#028090]/30 text-xs sm:text-sm text-[#CCFBF1]"
+              >
+                <div className="w-5 h-5 rounded-full bg-[#02C39A]/20 text-[#02C39A] font-bold flex items-center justify-center shrink-0 mt-0.5 text-xs">
+                  {index + 1}
+                </div>
+                <p className="leading-relaxed">{note}</p>
               </div>
             ))}
           </div>
-
-          {/* Last Exchange Excerpt */}
-          {lastExchange && (
-            <div className="mt-3 pt-3 border-t border-slate-100 bg-[#E6FFFA]/50 p-3.5 rounded-xl border border-[#99F6E4]/60">
-              <div className="text-[11px] font-bold text-[#0D9488] uppercase mb-1">
-                Recorded Response Excerpt:
-              </div>
-              <p className="text-xs text-slate-800 italic">
-                "{lastExchange.userResponseText}"
-              </p>
-              <div className="mt-1.5 text-[11px] text-[#028090] font-medium">
-                <strong>Clinician Feedback:</strong> {lastExchange.clinicianNotes}
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Action Toolbar: Restart Demo Button (Prominent here!) & Offline Download */}
-        <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#028090]/30">
+        {/* Action Buttons: Restart Demo & Export */}
+        <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#028090]/30">
           <button
             onClick={downloadOfflineHtml}
-            id="debrief-download-offline-btn"
+            id="download-offline-html-debrief-btn"
             className="w-full sm:w-auto px-5 py-3 rounded-full bg-[#032A2E] hover:bg-[#043E44] text-[#CCFBF1] hover:text-white border border-[#028090] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
           >
             <Download className="w-4 h-4 text-[#5EEAD4]" />
-            <span>Download Offline HTML Report</span>
+            <span>Download Offline Single-File HTML</span>
           </button>
 
           <button
             onClick={onRestartDemo}
-            id="restart-demo-btn"
+            id="restart-demo-debrief-btn"
             className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#02C39A] hover:bg-[#00A896] text-[#022F33] hover:text-white font-extrabold text-sm shadow-xl shadow-[#02C39A]/20 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group"
           >
-            <RotateCcw className="w-4 h-4 group-hover:-rotate-45 transition-transform" />
-            <span>Restart Demo (New Session)</span>
+            <RotateCcw className="w-4 h-4 group-hover:-rotate-90 transition-transform" />
+            <span>Restart Demo Flow</span>
           </button>
         </div>
       </motion.div>
 
       {/* Bottom Context Info */}
       <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#99F6E4]/60">
-        <Sparkles className="w-3.5 h-3.5 text-[#02C39A]" />
-        <span>Step 5 of 5: Session Completed &bull; Debriefing &amp; Longitudinal Tracking</span>
+        <ShieldCheck className="w-3.5 h-3.5 text-[#02C39A]" />
+        <span>End of Session Rehearsal &bull; Telemetry archived for clinical case history</span>
       </div>
     </div>
   );

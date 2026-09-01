@@ -20,10 +20,11 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
 }) => {
   const steps: { id: ScreenType; label: string; number: number }[] = [
     { id: 'intake', label: 'Intake', number: 1 },
-    { id: 'waiting-room', label: 'Waiting Room', number: 2 },
-    { id: 'interview', label: 'VR Interview', number: 3 },
-    { id: 'therapist-dashboard', label: 'Clinician Hub', number: 4 },
-    { id: 'debrief', label: 'Debrief', number: 5 },
+    { id: 'scenario-select', label: 'Scenarios', number: 2 },
+    { id: 'waiting-room', label: 'Waiting Room', number: 3 },
+    { id: 'interview', label: 'VR Scenario', number: 4 },
+    { id: 'therapist-dashboard', label: 'Clinician Hub', number: 5 },
+    { id: 'debrief', label: 'Debrief', number: 6 },
   ];
 
   return (

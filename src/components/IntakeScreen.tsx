@@ -25,7 +25,7 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
   initialConfig,
   onStartSession,
 }) => {
-  const [participantName, setParticipantName] = useState(initialConfig.participantName || 'Jordan M.');
+  const [participantName, setParticipantName] = useState(initialConfig.participantName || 'Rahul K.');
   const [sessionGoal, setSessionGoal] = useState(initialConfig.sessionGoal || SESSION_GOALS[0]);
   const [difficulty, setDifficulty] = useState<DifficultyLevel>(initialConfig.startingDifficulty || 'easy');
   const [clinicalNotes, setClinicalNotes] = useState(
@@ -39,6 +39,7 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
       sessionGoal,
       startingDifficulty: difficulty,
       clinicalNotes,
+      selectedScenarioId: initialConfig.selectedScenarioId || 'job-interview',
     });
   };
 
@@ -233,7 +234,7 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
             id="start-session-btn"
             className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#02C39A] hover:bg-[#00A896] text-[#022F33] hover:text-white font-extrabold text-sm shadow-xl shadow-[#02C39A]/20 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group"
           >
-            <span>Start Session</span>
+            <span>Next: Choose Scenario</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
@@ -242,7 +243,7 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
       {/* Bottom Context Info */}
       <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#99F6E4]/60">
         <Sparkles className="w-3.5 h-3.5 text-[#02C39A]" />
-        <span>Step 1 of 5: Intake &bull; Configures initial session parameters</span>
+        <span>Step 1 of 6: Intake Calibration &bull; Pre-session setup</span>
       </div>
     </div>
   );
