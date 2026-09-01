@@ -4,7 +4,7 @@ import { DIFFICULTY_PALETTE } from '../data/interviewScenarios';
 import { 
   ClipboardList, Target, User, Sparkles, ArrowRight, 
   CheckCircle2, Sliders, ShieldCheck, HeartHandshake, Briefcase, Zap,
-  Compass, Layers
+  Compass, Layers, FileText
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -43,49 +43,47 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
     });
   };
 
-  const activeDotColor = DIFFICULTY_PALETTE[difficulty];
-
   return (
-    <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between text-center items-center">
+    <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between items-stretch">
       {/* Top Header Badge */}
-      <div className="mb-4 text-center flex flex-col items-center">
-        <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#a26f4a] mb-1">
-          <span>Clinical Intake &amp; Setup</span>
-          <span>&bull;</span>
-          <span>Screen 1 of 6</span>
+      <div className="mb-4 text-left">
+        <div className="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#ffd166] text-black font-mono text-xs font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_#000] mb-2">
+          <span>01 / 06 CLINICIAN DOCKET</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#d6c8c5] text-center">
-          Therapist Session Intake Configuration
+        <h2 className="font-heading text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+          Session Intake &amp; Behavioral Target Configuration
         </h2>
-        <p className="text-sm text-[#d6c8c5]/80 mt-1 max-w-2xl text-center">
-          Configure clinical objectives, starting difficulty tier, and participant behavioral targets before opening the VR sensory lobby.
+        <p className="text-sm text-[#d6c8c5] mt-1 font-mono">
+          CALIBRATE PARTICIPANT PROFILE &bull; SELECT STARTING DIFFICULTY TIER &bull; INITIALIZE VR LOBBY
         </p>
       </div>
 
-      {/* Main Intake Form Container */}
+      {/* Main Intake Form Container (Brutalist Clinical Spec Sheet) */}
       <motion.form
         onSubmit={handleSubmit}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="w-full bg-[#1a1618] rounded-3xl border-2 border-[#7f3e3b]/50 shadow-2xl p-5 sm:p-7 flex flex-col gap-6 text-center"
+        className="w-full bg-[#181417] border-3 border-black shadow-[6px_6px_0px_#000] p-6 sm:p-8 flex flex-col gap-6"
       >
         {/* Therapist Header Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pb-3 border-b border-[#7f3e3b]/30 text-xs text-[#d6c8c5] gap-2">
-          <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
-            <ClipboardList className="w-4 h-4 text-[#a26f4a]" />
-            <span className="font-bold text-white uppercase tracking-wider">Clinician Intake Form</span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b-2 border-black text-xs text-[#d6c8c5] gap-2">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+            <span className="font-mono font-black text-white uppercase tracking-widest text-xs">
+              SPEC SHEET // PROTOCOL #NP-8821
+            </span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#7f3e3b]/30 text-[#d6c8c5] border border-[#a26f4a]/40 font-mono text-[11px] mx-auto sm:mx-0">
-            Session Ref: #NP-8821
+          <span className="px-2.5 py-0.5 bg-[#e0533c] text-white border-2 border-black font-mono font-black text-[10px] shadow-[2px_2px_0px_#000] uppercase">
+            STATUS: ACTIVE DRAFT
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
           {/* Participant Info */}
-          <div className="space-y-2 flex flex-col items-center text-center">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#d6c8c5] flex items-center justify-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-[#a26f4a]" />
+          <div className="space-y-2 flex flex-col">
+            <label className="text-xs font-mono font-black uppercase tracking-wider text-[#ffd166] flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Participant Name / ID</span>
             </label>
             <input
@@ -93,32 +91,32 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
               id="participant-name-input"
               value={participantName}
               onChange={(e) => setParticipantName(e.target.value)}
-              className="w-full text-center px-4 py-2.5 rounded-xl bg-[#251f22] border border-[#7f3e3b]/50 text-white placeholder-[#d6c8c5]/40 text-sm focus:outline-none focus:border-[#a26f4a] focus:ring-1 focus:ring-[#a26f4a]"
-              placeholder="e.g. Jordan M."
+              className="w-full px-4 py-3 bg-[#110e11] border-2 border-black text-white font-mono text-sm placeholder-[#d6c8c5]/40 focus:outline-none focus:bg-[#1f191d] focus:border-[#ffd166] shadow-[3px_3px_0px_#000]"
+              placeholder="e.g. Rahul K."
               required
             />
           </div>
 
           {/* Session Goal Dropdown (Required) */}
-          <div className="space-y-2 flex flex-col items-center text-center">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#d6c8c5] flex items-center justify-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-[#a26f4a]" />
-              <span>Primary Session Goal</span>
+          <div className="space-y-2 flex flex-col">
+            <label className="text-xs font-mono font-black uppercase tracking-wider text-[#ffd166] flex items-center gap-1.5">
+              <Target className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Target Behavioral Objective</span>
             </label>
             <div className="relative w-full">
               <select
                 id="session-goal-select"
                 value={sessionGoal}
                 onChange={(e) => setSessionGoal(e.target.value)}
-                className="w-full text-center px-4 py-2.5 rounded-xl bg-[#251f22] border border-[#7f3e3b]/50 text-white text-sm focus:outline-none focus:border-[#a26f4a] focus:ring-1 focus:ring-[#a26f4a] cursor-pointer appearance-none pr-10"
+                className="w-full px-4 py-3 bg-[#110e11] border-2 border-black text-white font-mono text-xs sm:text-sm focus:outline-none focus:bg-[#1f191d] focus:border-[#ffd166] shadow-[3px_3px_0px_#000] cursor-pointer appearance-none pr-10"
               >
                 {SESSION_GOALS.map((goal, idx) => (
-                  <option key={idx} value={goal} className="bg-[#1a1618] text-white">
+                  <option key={idx} value={goal} className="bg-[#110e11] text-white">
                     {goal}
                   </option>
                 ))}
               </select>
-              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#d6c8c5]/70">
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#ffd166] font-bold">
                 ▼
               </div>
             </div>
@@ -126,120 +124,119 @@ export const IntakeScreen: React.FC<IntakeScreenProps> = ({
         </div>
 
         {/* Starting Difficulty Selector */}
-        <div className="space-y-2.5 text-center flex flex-col items-center">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#d6c8c5] flex items-center justify-center gap-1.5">
-              <Sliders className="w-3.5 h-3.5 text-[#a26f4a]" />
-              <span>Starting Difficulty Tier</span>
+        <div className="space-y-3 text-left flex flex-col">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <label className="text-xs font-mono font-black uppercase tracking-wider text-[#ffd166] flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Select Conversational Difficulty Preset</span>
             </label>
-            <div className="flex items-center justify-center gap-1.5 text-xs">
-              <span className="text-[#d6c8c5]/70">(Selected:</span>
-              <span className="font-bold uppercase flex items-center gap-1" style={{ color: activeDotColor }}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeDotColor }} />
-                {difficulty}
-              </span>
-              <span className="text-[#d6c8c5]/70">)</span>
-            </div>
+            <span className="font-mono text-xs px-2 py-0.5 bg-black text-white border border-black font-bold">
+              ACTIVE: {difficulty.toUpperCase()}
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full">
             {/* Easy */}
             <div
               onClick={() => setDifficulty('easy')}
-              className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-between text-center ${
+              className={`p-4 border-3 border-black transition-all cursor-pointer flex flex-col justify-between text-left ${
                 difficulty === 'easy'
-                  ? 'bg-[#7f3e3b]/30 border-[#a26f4a] ring-1 ring-[#a26f4a]'
-                  : 'bg-[#251f22] border-[#7f3e3b]/40 hover:border-[#a26f4a]/60'
+                  ? 'bg-[#06d6a0] text-black shadow-[5px_5px_0px_#000] -translate-y-1'
+                  : 'bg-[#1e1a1d] text-[#d6c8c5] hover:bg-[#282226] shadow-[2px_2px_0px_#000]'
               }`}
             >
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#7f3e3b]" />
-                <span className="font-extrabold text-sm text-white">Easy</span>
-                <HeartHandshake className="w-4 h-4 text-[#a26f4a]" />
+              <div className="flex items-center justify-between mb-2">
+                <span className={`font-heading font-black text-base uppercase ${difficulty === 'easy' ? 'text-black' : 'text-white'}`}>
+                  01 Easy
+                </span>
+                <HeartHandshake className={`w-4 h-4 stroke-[2.5] ${difficulty === 'easy' ? 'text-black' : 'text-[#06d6a0]'}`} />
               </div>
-              <p className="text-xs text-[#d6c8c5]/80 leading-relaxed text-center">
-                NPC is warm &amp; supportive; response options are longer with emotional self-regulation cues.
+              <p className={`text-xs font-medium leading-snug ${difficulty === 'easy' ? 'text-black' : 'text-[#d6c8c5]/80'}`}>
+                NPC is warm &amp; validating. Long response windows with explicit self-regulation options.
               </p>
             </div>
 
             {/* Moderate */}
             <div
               onClick={() => setDifficulty('moderate')}
-              className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-between text-center ${
+              className={`p-4 border-3 border-black transition-all cursor-pointer flex flex-col justify-between text-left ${
                 difficulty === 'moderate'
-                  ? 'bg-[#a26f4a]/25 border-[#a26f4a] ring-1 ring-[#a26f4a]'
-                  : 'bg-[#251f22] border-[#7f3e3b]/40 hover:border-[#a26f4a]/70'
+                  ? 'bg-[#ffd166] text-black shadow-[5px_5px_0px_#000] -translate-y-1'
+                  : 'bg-[#1e1a1d] text-[#d6c8c5] hover:bg-[#282226] shadow-[2px_2px_0px_#000]'
               }`}
             >
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#a26f4a]" />
-                <span className="font-extrabold text-sm text-white">Moderate</span>
-                <Briefcase className="w-4 h-4 text-[#a26f4a]" />
+              <div className="flex items-center justify-between mb-2">
+                <span className={`font-heading font-black text-base uppercase ${difficulty === 'moderate' ? 'text-black' : 'text-white'}`}>
+                  02 Moderate
+                </span>
+                <Briefcase className={`w-4 h-4 stroke-[2.5] ${difficulty === 'moderate' ? 'text-black' : 'text-[#ffd166]'}`} />
               </div>
-              <p className="text-xs text-[#d6c8c5]/80 leading-relaxed text-center">
-                NPC is neutral and professional; responses are concise with standard interview pacing.
+              <p className={`text-xs font-medium leading-snug ${difficulty === 'moderate' ? 'text-black' : 'text-[#d6c8c5]/80'}`}>
+                NPC is neutral &amp; professional. Standard workplace interview pacing and direct follow-ups.
               </p>
             </div>
 
             {/* Hard */}
             <div
               onClick={() => setDifficulty('hard')}
-              className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-between text-center ${
+              className={`p-4 border-3 border-black transition-all cursor-pointer flex flex-col justify-between text-left ${
                 difficulty === 'hard'
-                  ? 'bg-[#7f3e3b]/40 border-[#d6c8c5] ring-1 ring-[#d6c8c5]'
-                  : 'bg-[#251f22] border-[#7f3e3b]/40 hover:border-[#d6c8c5]/60'
+                  ? 'bg-[#e0533c] text-white shadow-[5px_5px_0px_#000] -translate-y-1'
+                  : 'bg-[#1e1a1d] text-[#d6c8c5] hover:bg-[#282226] shadow-[2px_2px_0px_#000]'
               }`}
             >
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#d6c8c5]" />
-                <span className="font-extrabold text-sm text-white">Hard</span>
-                <Zap className="w-4 h-4 text-[#d6c8c5]" />
+              <div className="flex items-center justify-between mb-2">
+                <span className={`font-heading font-black text-base uppercase ${difficulty === 'hard' ? 'text-white' : 'text-white'}`}>
+                  03 Hard
+                </span>
+                <Zap className={`w-4 h-4 stroke-[2.5] ${difficulty === 'hard' ? 'text-white' : 'text-[#e0533c]'}`} />
               </div>
-              <p className="text-xs text-[#d6c8c5]/80 leading-relaxed text-center">
-                NPC interrupts / rapid follow-up; options include "ask for a moment to think".
+              <p className={`text-xs font-medium leading-snug ${difficulty === 'hard' ? 'text-white' : 'text-[#d6c8c5]/80'}`}>
+                Rapid pacing with unexpected follow-up pivots. Emphasizes asking for thinking time.
               </p>
             </div>
           </div>
         </div>
 
         {/* Clinical Supervision Strategy Notes */}
-        <div className="space-y-2 flex flex-col items-center text-center">
-          <label className="text-xs font-bold uppercase tracking-wider text-[#d6c8c5] flex items-center justify-center gap-1.5">
-            <Compass className="w-3.5 h-3.5 text-[#a26f4a]" />
-            <span>Therapist Pre-Session Notes</span>
+        <div className="space-y-2 flex flex-col text-left">
+          <label className="text-xs font-mono font-black uppercase tracking-wider text-[#ffd166] flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Therapist Pre-Session Clinical Directives</span>
           </label>
           <textarea
             rows={2}
             value={clinicalNotes}
             onChange={(e) => setClinicalNotes(e.target.value)}
-            className="w-full text-center px-4 py-2.5 rounded-xl bg-[#251f22] border border-[#7f3e3b]/50 text-white placeholder-[#d6c8c5]/40 text-xs sm:text-sm focus:outline-none focus:border-[#a26f4a] focus:ring-1 focus:ring-[#a26f4a] resize-none"
+            className="w-full px-4 py-3 bg-[#110e11] border-2 border-black text-white font-mono text-xs sm:text-sm placeholder-[#d6c8c5]/40 focus:outline-none focus:bg-[#1f191d] focus:border-[#ffd166] shadow-[3px_3px_0px_#000] resize-none"
             placeholder="Clinical observation guidance..."
           />
         </div>
 
         {/* Action Button: Start Session -> Goes to Scenario Select */}
-        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4 border-t border-[#7f3e3b]/30">
-          <div className="flex items-center justify-center gap-2 text-xs text-[#d6c8c5]/70 text-center">
-            <ShieldCheck className="w-4 h-4 text-[#a26f4a]" />
-            <span>Telemetry calibrated &bull; Proceeding with <strong>{difficulty.toUpperCase()}</strong> preset</span>
+        <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t-2 border-black">
+          <div className="flex items-center gap-2 font-mono text-xs text-[#d6c8c5]">
+            <ShieldCheck className="w-4 h-4 text-[#06d6a0] stroke-[2.5]" />
+            <span>DATA ENCRYPTION ON &bull; PRESET {difficulty.toUpperCase()} READY</span>
           </div>
 
           <button
             type="submit"
             id="start-session-btn"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#7f3e3b] hover:bg-[#944945] text-white font-extrabold text-sm shadow-xl shadow-[#7f3e3b]/30 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group border border-[#a26f4a]/50 mx-auto"
+            className="px-8 py-4 bg-[#ffd166] hover:bg-[#ffe28a] text-black font-heading font-black text-base uppercase tracking-wider border-3 border-black shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#000] transition-all flex items-center justify-center gap-2 cursor-pointer group"
           >
-            <span>Next: Choose Scenario</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#d6c8c5]" />
+            <span>NEXT: CHOOSE SCENARIO</span>
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform stroke-[3]" />
           </button>
         </div>
       </motion.form>
 
       {/* Bottom Context Info */}
-      <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#d6c8c5]/60 text-center">
-        <Sparkles className="w-3.5 h-3.5 text-[#a26f4a]" />
-        <span>Step 1 of 6: Intake Calibration &bull; Pre-session setup</span>
+      <div className="mt-4 flex items-center justify-between font-mono text-xs text-[#d6c8c5]/60 px-1">
+        <span>STAGE: INTAKE SPECIFICATION</span>
+        <span>NEUROPRACTICE OS</span>
       </div>
     </div>
   );
 };
+

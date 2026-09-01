@@ -4,7 +4,7 @@ import { SCENARIO_CATALOG } from '../data/interviewScenarios';
 import { ScenarioAvatarIllustration } from './VectorIllustrations';
 import { 
   Play, Sparkles, Clock, CheckCircle2, ArrowRight, 
-  Info, Compass, ShieldCheck, ChevronRight
+  Info, Compass, ShieldCheck, ChevronRight, Bookmark, Flame
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { playSoftChime } from '../utils/audio';
@@ -38,7 +38,7 @@ export const ScenarioSelectScreen: React.FC<ScenarioSelectScreenProps> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-4 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between">
+    <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between items-stretch">
       {/* Toast Notification for Coming Soon cards */}
       <AnimatePresence>
         {toastMessage && (
@@ -46,15 +46,15 @@ export const ScenarioSelectScreen: React.FC<ScenarioSelectScreenProps> = ({
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-20 right-4 sm:right-8 z-50 bg-[#1a1618] border border-[#a26f4a] text-[#d6c8c5] px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-md"
+            className="fixed top-20 right-4 sm:right-8 z-50 bg-[#ffd166] border-3 border-black text-black px-4 py-3 shadow-[5px_5px_0px_#000] flex items-center gap-3 font-mono"
           >
-            <Clock className="w-4 h-4 text-[#a26f4a] shrink-0" />
-            <div className="text-xs font-semibold">{toastMessage}</div>
+            <Clock className="w-4 h-4 stroke-[2.5] shrink-0" />
+            <div className="text-xs font-black uppercase">{toastMessage}</div>
             <button
               onClick={() => setToastMessage(null)}
-              className="text-[#d6c8c5] hover:text-white text-xs ml-2 font-bold cursor-pointer"
+              className="text-black hover:bg-black hover:text-white px-1.5 py-0.5 border border-black text-xs font-black cursor-pointer ml-2"
             >
-              &times;
+              ✕
             </button>
           </motion.div>
         )}
@@ -62,24 +62,21 @@ export const ScenarioSelectScreen: React.FC<ScenarioSelectScreenProps> = ({
 
       <div>
         {/* Step Header */}
-        <div className="text-center max-w-2xl mx-auto mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1a1618] border border-[#7f3e3b]/60 text-[#a26f4a] text-xs font-bold mb-3 shadow-inner">
-            <Compass className="w-3.5 h-3.5" />
-            <span>Screen 2 of 6 &bull; Scenario Library</span>
+        <div className="text-left mb-6">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#ffd166] text-black font-mono text-xs font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_#000] mb-2">
+            <span>02 / 06 SCENARIO MATRIX</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
-            Choose a Rehearsal Scenario
+          <h1 className="font-heading text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+            Select Rehearsal Simulation Environment
           </h1>
-          <p className="text-sm text-[#d6c8c5]/80 leading-relaxed">
-            Select an interactive environment calibrated for participant{' '}
-            <strong className="text-white font-bold">{intakeConfig.participantName}</strong>. 
-            Scenarios provide adaptive social pacing and behavioral feedback.
+          <p className="text-xs sm:text-sm text-[#d6c8c5] font-mono mt-1">
+            TARGET: <span className="text-[#ffd166] font-bold uppercase">{intakeConfig.participantName}</span> &bull; DIFFICULTY: <span className="text-[#06d6a0] font-bold uppercase">{intakeConfig.startingDifficulty}</span> &bull; 7 ENVIRONMENT MODULES
           </p>
         </div>
 
-        {/* 7 Scenario Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {/* 7 Scenario Cards Grid - Editorial Studio Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
           {SCENARIO_CATALOG.map((scenario, index) => {
             const isPlayable = scenario.status === 'playable';
             const isSelected = selectedScenarioId === scenario.id;
@@ -92,71 +89,74 @@ export const ScenarioSelectScreen: React.FC<ScenarioSelectScreenProps> = ({
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 onClick={() => handleCardClick(scenario.id, isPlayable)}
                 id={`scenario-card-${scenario.id}`}
-                className={`group relative rounded-3xl p-5 border-2 transition-all duration-200 text-center flex flex-col items-center justify-between ${
+                className={`group relative p-5 border-3 border-black transition-all duration-150 flex flex-col justify-between text-left cursor-pointer ${
                   isPlayable
                     ? isSelected
-                      ? 'bg-gradient-to-b from-[#2a1d20] to-[#1a1618] border-[#a26f4a] ring-2 ring-[#7f3e3b]/50 shadow-2xl shadow-[#7f3e3b]/20 cursor-pointer scale-[1.02]'
-                      : 'bg-[#1a1618] hover:bg-[#251f22] border-[#7f3e3b]/40 hover:border-[#a26f4a] shadow-lg cursor-pointer'
-                    : 'bg-[#141012] border-[#3d2524]/40 opacity-60 hover:opacity-85 cursor-pointer'
+                      ? 'bg-[#1e191d] shadow-[7px_7px_0px_#ffd166] -translate-x-1 -translate-y-1'
+                      : 'bg-[#181417] hover:bg-[#221c21] shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#000]'
+                    : 'bg-[#120f12] opacity-65 hover:opacity-85 shadow-[3px_3px_0px_#000]'
                 }`}
               >
-                {/* Status Badge at Top */}
-                <div className="mb-2">
+                {/* Status Bar */}
+                <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b-2 border-black">
+                  <span className="font-mono text-[10px] font-black uppercase text-[#ffd166]">
+                    {scenario.categoryTag}
+                  </span>
+
                   {isPlayable ? (
                     isSelected ? (
-                      <span className="px-2.5 py-1 rounded-full bg-[#7f3e3b] text-white text-[10px] font-black tracking-wide flex items-center gap-1 shadow-sm">
-                        <CheckCircle2 className="w-3 h-3 text-[#d6c8c5]" />
-                        <span>Selected</span>
+                      <span className="px-2 py-0.5 bg-[#ffd166] text-black border-2 border-black text-[10px] font-mono font-black uppercase shadow-[2px_2px_0px_#000]">
+                        ✓ SELECTED
                       </span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-full bg-[#7f3e3b]/20 border border-[#a26f4a]/50 text-[#d6c8c5] text-[10px] font-bold">
-                        Ready in VR
+                      <span className="px-2 py-0.5 bg-[#06d6a0] text-black border-2 border-black text-[10px] font-mono font-black uppercase shadow-[1px_1px_0px_#000]">
+                        READY IN VR
                       </span>
                     )
                   ) : (
-                    <span className="px-2.5 py-1 rounded-full bg-[#141012] border border-[#7f3e3b]/30 text-[#d6c8c5]/50 text-[10px] font-bold flex items-center gap-1">
-                      <Clock className="w-2.5 h-2.5 text-[#a26f4a]" />
-                      <span>Coming Soon</span>
+                    <span className="px-2 py-0.5 bg-[#251f22] text-[#d6c8c5]/60 border border-black text-[10px] font-mono font-bold uppercase">
+                      ROADMAP
                     </span>
                   )}
                 </div>
 
                 {/* Avatar and Scenario Title */}
-                <div className="flex flex-col items-center justify-center gap-2 mb-3 text-center">
-                  <ScenarioAvatarIllustration
-                    iconType={scenario.iconType}
-                    size={52}
-                    className={isSelected ? 'ring-2 ring-[#a26f4a]' : ''}
-                  />
+                <div className="flex items-center gap-3.5 mb-3">
+                  <div className="border-2 border-black shadow-[2px_2px_0px_#000] shrink-0 bg-[#0d0c0f]">
+                    <ScenarioAvatarIllustration
+                      iconType={scenario.iconType}
+                      size={48}
+                    />
+                  </div>
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#a26f4a] block text-center">
-                      {scenario.categoryTag}
-                    </span>
-                    <h3 className="text-base font-bold text-white group-hover:text-[#d6c8c5] transition-colors flex items-center justify-center gap-1.5 text-center">
-                      <span>{scenario.title}</span>
+                    <h3 className="font-heading font-black text-lg text-white group-hover:text-[#ffd166] transition-colors uppercase leading-tight">
+                      {scenario.title}
                     </h3>
+                    <p className="text-[11px] font-mono text-[#d6c8c5]/70 mt-0.5">
+                      Interlocutor: <strong className="text-white font-bold">{scenario.npcName}</strong> ({scenario.roleLabel})
+                    </p>
                   </div>
                 </div>
 
                 {/* Scenario Description */}
-                <p className="text-xs text-[#d6c8c5]/90 leading-relaxed mb-4 text-center">
+                <p className="text-xs text-[#d6c8c5] font-medium leading-relaxed mb-4">
                   {scenario.description}
                 </p>
 
-                {/* Card Footer / Metadata */}
-                <div className="w-full pt-3 border-t border-[#7f3e3b]/25 flex flex-col sm:flex-row items-center justify-center gap-2 text-[11px] text-center">
-                  <span className="text-[#d6c8c5]/70 text-center">
-                    Role: <strong className="text-white font-semibold">{scenario.roleLabel} ({scenario.npcName})</strong>
+                {/* Card Footer */}
+                <div className="pt-3 border-t-2 border-black flex items-center justify-between font-mono text-[11px]">
+                  <span className="text-[#d6c8c5]/60">
+                    DIFFICULTY: <span className="text-[#ffd166] uppercase">{intakeConfig.startingDifficulty}</span>
                   </span>
 
                   {isPlayable ? (
-                    <span className="text-[#a26f4a] font-bold flex items-center justify-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                      <span>Launch</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                    <span className="font-black text-[#ffd166] flex items-center gap-1 group-hover:translate-x-1 transition-transform uppercase">
+                      <span>DEPLOY</span>
+                      <ChevronRight className="w-4 h-4 stroke-[3]" />
                     </span>
                   ) : (
-                    <span className="text-[#d6c8c5]/50 font-semibold text-[10px]">
-                      Roadmap Item
+                    <span className="text-[#d6c8c5]/40 font-bold uppercase">
+                      LOCKED
                     </span>
                   )}
                 </div>
@@ -167,22 +167,20 @@ export const ScenarioSelectScreen: React.FC<ScenarioSelectScreenProps> = ({
       </div>
 
       {/* Bottom Sticky Action Bar */}
-      <div className="bg-[#1a1618]/95 backdrop-blur-md rounded-3xl p-4 border-2 border-[#7f3e3b]/40 flex flex-col sm:flex-row items-center justify-between gap-4 mt-2 shadow-2xl text-center">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-center mx-auto sm:mx-0">
-          <div className="w-10 h-10 rounded-2xl bg-[#7f3e3b]/30 border border-[#a26f4a] flex items-center justify-center text-[#d6c8c5] shrink-0 font-black">
+      <div className="bg-[#181417] border-3 border-black p-5 shadow-[6px_6px_0px_#000] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mt-2">
+        <div className="flex items-center gap-3.5 font-mono text-left">
+          <div className="w-10 h-10 bg-[#e0533c] border-2 border-black text-white font-black flex items-center justify-center shadow-[2px_2px_0px_#000] shrink-0 text-sm">
             VR
           </div>
-          <div className="text-center sm:text-left">
-            <div className="text-[#d6c8c5] font-medium text-center sm:text-left">
-              Ready for participant <strong className="text-white font-bold">{intakeConfig.participantName}</strong>
+          <div>
+            <div className="text-xs text-[#d6c8c5]">
+              PARTICIPANT: <strong className="text-white font-black uppercase">{intakeConfig.participantName}</strong>
             </div>
-            <div className="text-white font-bold flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
-              <span>Selected Scenario:</span>
-              <span className="text-[#a26f4a]">
+            <div className="text-xs text-white font-black flex flex-wrap items-center gap-1.5 mt-0.5">
+              <span>SELECTED:</span>
+              <span className="text-[#ffd166] uppercase">
                 {SCENARIO_CATALOG.find((s) => s.id === selectedScenarioId)?.title || 'Job Interview'}
               </span>
-              <span className="text-[#d6c8c5]/40">&bull;</span>
-              <span className="text-[#d6c8c5] capitalize">{intakeConfig.startingDifficulty} Difficulty</span>
             </div>
           </div>
         </div>
@@ -190,12 +188,13 @@ export const ScenarioSelectScreen: React.FC<ScenarioSelectScreenProps> = ({
         <button
           onClick={onProceedToWaitingRoom}
           id="proceed-to-lobby-btn"
-          className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#7f3e3b] hover:bg-[#944945] text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-[#7f3e3b]/30 flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-105 active:scale-95 group border border-[#a26f4a]/50 mx-auto sm:mx-0"
+          className="px-8 py-4 bg-[#ffd166] hover:bg-[#ffe28a] text-black font-heading font-black text-sm sm:text-base uppercase tracking-wider border-3 border-black shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#000] transition-all flex items-center justify-center gap-2 cursor-pointer group"
         >
-          <span>Enter Sensory Lobby (Waiting Room)</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#d6c8c5]" />
+          <span>PROCEED TO SENSORY WAITING ROOM</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform stroke-[3]" />
         </button>
       </div>
     </div>
   );
 };
+

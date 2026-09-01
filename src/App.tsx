@@ -81,7 +81,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0e10] text-[#d6c8c5] flex flex-col font-sans selection:bg-[#7f3e3b] selection:text-white">
+    <div className="min-h-screen bg-[#0d0c0f] text-[#d6c8c5] flex flex-col font-sans selection:bg-[#ffd166] selection:text-black">
       {/* Top Clinical Navigation Bar */}
       <NavigationHeader
         currentScreen={currentScreen}

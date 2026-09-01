@@ -4,7 +4,7 @@ import { DIFFICULTY_PALETTE, getScenarioData, SCENARIO_CATALOG } from '../data/i
 import { 
   Award, CheckCircle2, AlertTriangle, Target, RotateCcw, Download,
   Sparkles, FileText, User, Activity, Clock, ShieldCheck, ArrowRight,
-  UtensilsCrossed, Briefcase, Database, Cpu, Loader2
+  UtensilsCrossed, Briefcase, Database, Cpu, Loader2, Terminal
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { downloadOfflineHtml } from '../utils/offlineHtmlGenerator';
@@ -26,7 +26,7 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
   const activeScenarioId: ScenarioId = lastExchange?.scenarioId || intakeConfig.selectedScenarioId || 'job-interview';
   const scenarioMeta = SCENARIO_CATALOG.find((s) => s.id === activeScenarioId) || SCENARIO_CATALOG[0];
   const currentScenario = getScenarioData(activeScenarioId, difficulty);
-  const activeDotColor = DIFFICULTY_PALETTE[difficulty] || '#7f3e3b';
+  const activeDotColor = DIFFICULTY_PALETTE[difficulty] || '#ffd166';
 
   const [aiNotes, setAiNotes] = useState<string[] | null>(null);
   const [aiScore, setAiScore] = useState<number | null>(null);
@@ -126,20 +126,25 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
   const flaggedCount = 1; // 1 long pause moment detected
 
   return (
-    <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between text-center items-center">
+    <div className="max-w-5xl mx-auto py-6 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between items-stretch">
       {/* Top Header Badge */}
-      <div className="mb-4 flex flex-col items-center justify-center text-center w-full">
-        <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#a26f4a] mb-1">
-          <span>Screen 6 of 6</span>
-          <span>&bull;</span>
-          <span>Post-Session Clinical Debrief</span>
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
+        <div>
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#06d6a0] text-black font-mono text-xs font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_#000] mb-2">
+            <span>06 / 06 CLINICAL SUMMARY</span>
+          </div>
+          <h2 className="font-heading text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+            Post-Session Debrief &amp; Telemetry
+          </h2>
+          <p className="text-xs sm:text-sm font-mono text-[#d6c8c5]/80 mt-1 uppercase">
+            COMPREHENSIVE POST-REHEARSAL TELEMETRY HIGHLIGHTING GOAL MASTERY &amp; SENSORY LATENCY
+          </p>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#d6c8c5] text-center">
-          Session Debrief &amp; Clinical Summary
-        </h2>
-        <p className="text-sm text-[#d6c8c5]/80 mt-1 max-w-2xl text-center">
-          Comprehensive post-rehearsal analysis highlighting behavioral goal progress, pacing flags, and clinical discussion takeaways.
-        </p>
+
+        <div className="flex items-center gap-2 font-mono text-xs bg-[#181417] px-3.5 py-2 border-2 border-black text-[#ffd166] shadow-[3px_3px_0px_#000] uppercase font-black">
+          <Terminal className="w-4 h-4 stroke-[2.5]" />
+          <span>REPORT #CR-{Math.floor(1000 + Math.random() * 9000)}</span>
+        </div>
       </div>
 
       {/* Main Debrief Container */}
@@ -147,166 +152,168 @@ export const DebriefScreen: React.FC<DebriefScreenProps> = ({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="w-full bg-[#1a1618] rounded-3xl border-2 border-[#7f3e3b]/50 shadow-2xl p-5 sm:p-7 flex flex-col gap-6 text-center"
+        className="w-full bg-[#181417] border-3 border-black shadow-[8px_8px_0px_#000] p-5 sm:p-7 flex flex-col gap-6 text-left"
       >
         {/* Debrief Top Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pb-3 border-b border-[#7f3e3b]/30 text-xs text-[#d6c8c5] gap-2 text-center">
-          <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
-            <Award className="w-4 h-4 text-[#a26f4a]" />
-            <span className="font-bold text-white uppercase tracking-wider">Clinical Rehearsal Report</span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b-2 border-black font-mono text-xs text-[#d6c8c5] gap-2">
+          <div className="flex items-center gap-2 text-white font-black uppercase">
+            <Award className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+            <span>CLINICAL REHEARSAL VERIFICATION REPORT</span>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 mx-auto sm:mx-0">
-            <span className="font-mono text-[#d6c8c5]/70">Participant: {intakeConfig.participantName || 'Rahul K.'}</span>
-            <span className="px-3 py-0.5 rounded-full bg-[#7f3e3b]/30 text-[#d6c8c5] border border-[#a26f4a]/50 font-mono text-[11px]">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[#d6c8c5]/70 uppercase">PARTICIPANT: {intakeConfig.participantName || 'RAHUL K.'}</span>
+            <span className="px-2.5 py-0.5 bg-[#06d6a0] text-black font-black uppercase border border-black shadow-[2px_2px_0px_#000]">
               STATUS: COMPLETED
             </span>
           </div>
         </div>
 
         {/* 4 Core Summary Stat Tiles */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Tile 1: Session Goal */}
-          <div className="bg-[#251f22] rounded-2xl p-4 border border-[#7f3e3b]/40 flex flex-col items-center justify-between text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-[#d6c8c5]/70 mb-1.5 w-full">
-              <span className="font-semibold uppercase tracking-wider">Session Goal</span>
-              <Target className="w-4 h-4 text-[#a26f4a]" />
+          <div className="bg-[#110e11] p-4 border-2 border-black shadow-[4px_4px_0px_#000] flex flex-col justify-between">
+            <div className="flex items-center justify-between font-mono text-[10px] text-[#ffd166] font-black uppercase mb-2">
+              <span>SESSION GOAL</span>
+              <Target className="w-4 h-4 stroke-[2.5]" />
             </div>
-            <div className="text-sm font-bold text-white leading-snug line-clamp-2 text-center">
+            <div className="font-heading font-black text-sm text-white uppercase leading-snug line-clamp-2">
               {intakeConfig.sessionGoal || 'Build confidence answering behavioral questions'}
             </div>
-            <div className="mt-2 text-[10px] text-[#22c55e] font-bold flex items-center justify-center gap-1 text-center">
-              <CheckCircle2 className="w-3 h-3" /> Target Addressed
+            <div className="mt-3 font-mono text-[10px] text-[#06d6a0] font-black uppercase flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 stroke-[3]" /> TARGET ADDRESSED
             </div>
           </div>
 
           {/* Tile 2: Scenario Completed */}
-          <div className="bg-[#251f22] rounded-2xl p-4 border border-[#7f3e3b]/40 flex flex-col items-center justify-between text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-[#d6c8c5]/70 mb-1.5 w-full">
-              <span className="font-semibold uppercase tracking-wider">Scenario</span>
+          <div className="bg-[#110e11] p-4 border-2 border-black shadow-[4px_4px_0px_#000] flex flex-col justify-between">
+            <div className="flex items-center justify-between font-mono text-[10px] text-[#ffd166] font-black uppercase mb-2">
+              <span>SCENARIO</span>
               {activeScenarioId === 'restaurant-ordering' ? (
-                <UtensilsCrossed className="w-4 h-4 text-[#a26f4a]" />
+                <UtensilsCrossed className="w-4 h-4 stroke-[2.5]" />
               ) : (
-                <Briefcase className="w-4 h-4 text-[#a26f4a]" />
+                <Briefcase className="w-4 h-4 stroke-[2.5]" />
               )}
             </div>
-            <div className="text-center">
-              <div className="text-sm font-bold text-white leading-snug text-center">
+            <div>
+              <div className="font-heading font-black text-sm text-white uppercase leading-snug">
                 {scenarioMeta.title}
               </div>
-              <div className="text-[11px] font-bold mt-1 flex items-center justify-center gap-1.5 text-center" style={{ color: activeDotColor }}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: activeDotColor }} />
-                <span>Difficulty: {difficulty.toUpperCase()}</span>
+              <div className="font-mono text-[11px] font-black uppercase mt-1 text-[#ffd166]">
+                DIFF: {difficulty.toUpperCase()}
               </div>
             </div>
-            <div className="mt-2 text-[10px] text-[#d6c8c5]/70 text-center">
+            <div className="mt-3 font-mono text-[10px] text-[#d6c8c5]/70 uppercase truncate">
               {currentScenario.scenarioTitle}
             </div>
           </div>
 
           {/* Tile 3: Flagged Moments */}
-          <div className="bg-[#251f22] rounded-2xl p-4 border border-[#a26f4a]/50 flex flex-col items-center justify-between text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-[#a26f4a] mb-1.5 w-full">
-              <span className="font-semibold uppercase tracking-wider">Flagged Moments</span>
-              <AlertTriangle className="w-4 h-4 text-[#a26f4a]" />
+          <div className="bg-[#110e11] p-4 border-2 border-black shadow-[4px_4px_0px_#ffd166] flex flex-col justify-between">
+            <div className="flex items-center justify-between font-mono text-[10px] text-[#e0533c] font-black uppercase mb-2">
+              <span>FLAGGED MOMENTS</span>
+              <AlertTriangle className="w-4 h-4 stroke-[2.5]" />
             </div>
-            <div className="text-2xl font-extrabold text-white text-center">
-              {flaggedCount} <span className="text-xs font-medium text-[#a26f4a]">moment</span>
+            <div className="font-heading font-black text-2xl text-white">
+              {flaggedCount} <span className="font-mono text-xs font-bold text-[#e0533c] uppercase">MOMENT</span>
             </div>
-            <div className="mt-2 text-[11px] text-[#a26f4a] font-semibold flex items-center justify-center gap-1 text-center">
-              <Clock className="w-3 h-3" /> Long pause detected (+4.2s)
+            <div className="mt-3 font-mono text-[10px] text-[#ffd166] font-black uppercase flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 stroke-[2.5]" /> LONG PAUSE (+4.2S)
             </div>
           </div>
 
           {/* Tile 4: Simple Score */}
-          <div className="bg-[#251f22] rounded-2xl p-4 border border-[#7f3e3b]/50 flex flex-col items-center justify-between text-center">
-            <div className="flex items-center justify-center gap-2 text-xs text-[#d6c8c5] mb-1.5 w-full">
-              <span className="font-semibold uppercase tracking-wider">Performance Score</span>
-              <Award className="w-4 h-4 text-[#a26f4a]" />
+          <div className="bg-[#ffd166] p-4 border-2 border-black shadow-[4px_4px_0px_#000] text-black flex flex-col justify-between">
+            <div className="flex items-center justify-between font-mono text-[10px] font-black uppercase mb-2 text-black">
+              <span>SCORE</span>
+              <Award className="w-4 h-4 stroke-[2.5]" />
             </div>
-            <div className="flex items-baseline justify-center gap-1 text-center">
-              <span className="text-3xl font-black text-white">{score}</span>
-              <span className="text-sm font-bold text-[#a26f4a]">/ 10</span>
+            <div className="flex items-baseline gap-1">
+              <span className="font-heading font-black text-4xl leading-none">{score}</span>
+              <span className="font-mono text-sm font-black">/ 10</span>
             </div>
-            <div className="mt-2 text-[10px] text-[#22c55e] font-bold text-center">
-              High Social Appropriateness
+            <div className="mt-3 font-mono text-[10px] font-black uppercase">
+              HIGH SOCIAL APPROPRIATENESS
             </div>
           </div>
         </div>
 
         {/* Clinical Debrief Notes */}
-        <div className="bg-[#141012] rounded-3xl p-5 border border-[#7f3e3b]/40 text-center">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 mb-3 text-center">
-            <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-[#d6c8c5] mx-auto sm:mx-0">
-              <Sparkles className="w-4 h-4 text-[#a26f4a]" />
+        <div className="bg-[#110e11] p-5 border-2 border-black shadow-[4px_4px_0px_#000]">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2 font-mono text-xs font-black uppercase text-white">
+              <Sparkles className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
               <span>AI-Assisted Clinical Debrief &amp; Observations</span>
             </div>
-            <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
+            <div>
               {isLoadingAi ? (
-                <span className="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#251f22] text-[#d6c8c5] text-[11px] font-mono border border-[#7f3e3b]/50 animate-pulse">
-                  <Loader2 className="w-3 h-3 animate-spin text-[#a26f4a]" />
-                  <span>Analyzing Telemetry...</span>
+                <span className="flex items-center gap-1.5 px-3 py-0.5 bg-[#181417] text-[#ffd166] text-[11px] font-mono font-bold border border-black uppercase animate-pulse">
+                  <Loader2 className="w-3 h-3 animate-spin stroke-[2.5]" />
+                  <span>ANALYZING TELEMETRY...</span>
                 </span>
               ) : backendSynced ? (
-                <span className="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#7f3e3b]/30 text-[#d6c8c5] text-[11px] font-mono border border-[#a26f4a]/50">
-                  <Database className="w-3 h-3 text-[#a26f4a]" />
-                  <span>Backend Telemetry Synced</span>
+                <span className="flex items-center gap-1.5 px-3 py-0.5 bg-[#06d6a0] text-black text-[11px] font-mono font-black border border-black uppercase shadow-[2px_2px_0px_#000]">
+                  <Database className="w-3 h-3 stroke-[2.5]" />
+                  <span>TELEMETRY SYNCED</span>
                 </span>
               ) : null}
             </div>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-3 font-mono text-xs">
             {debriefNotes.map((note, index) => (
               <div
                 key={index}
-                className="flex flex-col sm:flex-row items-center justify-center gap-2.5 bg-[#251f22] p-3 rounded-2xl border border-[#7f3e3b]/30 text-xs sm:text-sm text-[#d6c8c5] text-center"
+                className="flex items-start gap-3 bg-[#181417] p-3.5 border-2 border-black text-[#d6c8c5]"
               >
-                <div className="w-5 h-5 rounded-full bg-[#7f3e3b]/40 text-white font-bold flex items-center justify-center shrink-0 text-xs">
-                  {index + 1}
+                <div className="w-6 h-6 bg-[#ffd166] text-black font-mono font-black flex items-center justify-center shrink-0 text-xs border border-black shadow-[1px_1px_0px_#000]">
+                  0{index + 1}
                 </div>
-                <p className="leading-relaxed text-center">{note}</p>
+                <p className="leading-relaxed font-sans text-sm font-medium text-white">{note}</p>
               </div>
             ))}
           </div>
 
           {aiRecommendation && (
-            <div className="mt-3.5 pt-3 border-t border-[#7f3e3b]/30 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-[#d6c8c5] text-center">
-              <Cpu className="w-4 h-4 text-[#a26f4a] shrink-0" />
-              <div className="text-center">
-                <span className="font-bold text-white uppercase tracking-wider text-[11px] block text-center">Therapist Next-Step Recommendation:</span>
-                <p className="text-[#d6c8c5]/90 mt-0.5 text-center">{aiRecommendation}</p>
+            <div className="mt-4 pt-3.5 border-t-2 border-black flex items-start gap-3 font-mono text-xs">
+              <Cpu className="w-5 h-5 text-[#ffd166] shrink-0 stroke-[2.5] mt-0.5" />
+              <div>
+                <span className="font-black text-[#ffd166] uppercase tracking-wider block">
+                  THERAPIST NEXT-STEP RECOMMENDATION:
+                </span>
+                <p className="text-[#d6c8c5] mt-0.5 font-sans font-medium text-sm leading-relaxed">{aiRecommendation}</p>
               </div>
             </div>
           )}
         </div>
 
         {/* Action Buttons: Restart Demo & Export */}
-        <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#7f3e3b]/30 text-center">
+        <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4 border-t-2 border-black">
           <button
             onClick={downloadOfflineHtml}
             id="download-offline-html-debrief-btn"
-            className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-[#251f22] hover:bg-[#342a2d] text-[#d6c8c5] hover:text-white border border-[#7f3e3b] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors mx-auto sm:mx-0"
+            className="w-full sm:w-auto px-6 py-4 bg-[#181417] hover:bg-[#251f22] text-[#d6c8c5] hover:text-white border-3 border-black font-heading font-black text-xs sm:text-sm uppercase tracking-wider shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-[2px] active:translate-y-[2px] flex items-center justify-center gap-2 cursor-pointer transition-all"
           >
-            <Download className="w-4 h-4 text-[#a26f4a]" />
-            <span>Download Offline Single-File HTML</span>
+            <Download className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+            <span>DOWNLOAD OFFLINE REPORT (HTML)</span>
           </button>
 
           <button
             onClick={onRestartDemo}
             id="restart-demo-debrief-btn"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#7f3e3b] hover:bg-[#944945] text-white font-extrabold text-sm shadow-xl shadow-[#7f3e3b]/30 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group border border-[#a26f4a]/50 mx-auto sm:mx-0"
+            className="w-full sm:w-auto px-8 py-4 bg-[#ffd166] hover:bg-[#ffe28a] text-black font-heading font-black text-sm sm:text-base uppercase tracking-wider border-3 border-black shadow-[5px_5px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[7px_7px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#000] flex items-center justify-center gap-2 cursor-pointer transition-all group"
           >
-            <RotateCcw className="w-4 h-4 group-hover:-rotate-90 transition-transform text-[#d6c8c5]" />
-            <span>Restart Demo Flow</span>
+            <RotateCcw className="w-5 h-5 group-hover:-rotate-90 transition-transform stroke-[3]" />
+            <span>RESTART DEMO FLOW</span>
           </button>
         </div>
       </motion.div>
 
       {/* Bottom Context Info */}
-      <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#d6c8c5]/60 text-center">
-        <ShieldCheck className="w-3.5 h-3.5 text-[#a26f4a]" />
-        <span>End of Session Rehearsal &bull; Telemetry archived for clinical case history</span>
+      <div className="mt-4 flex items-center justify-center gap-2 font-mono text-xs text-[#d6c8c5]/70 uppercase">
+        <ShieldCheck className="w-4 h-4 text-[#06d6a0] stroke-[2.5]" />
+        <span>END OF SESSION REHEARSAL &bull; TELEMETRY ARCHIVED FOR CLINICAL CASE HISTORY</span>
       </div>
     </div>
   );
 };
+

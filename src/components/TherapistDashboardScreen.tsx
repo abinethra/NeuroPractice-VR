@@ -6,7 +6,7 @@ import {
   Pause, Play, Lightbulb, ShieldAlert, CheckCircle2, RotateCcw, 
   Activity, Laptop, Sliders, AlertCircle, BarChart3, Clock, 
   FileText, Download, Sparkles, Check, ChevronRight, ArrowRight,
-  AlertTriangle, UtensilsCrossed, Briefcase
+  AlertTriangle, UtensilsCrossed, Briefcase, Terminal, Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Chart from 'chart.js/auto';
@@ -107,7 +107,7 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
         particleCount: 50,
         spread: 60,
         origin: { y: 0.6 },
-        colors: ['#7f3e3b', '#a26f4a', '#d6c8c5', '#002e00'],
+        colors: ['#ffd166', '#e0533c', '#06d6a0', '#000000'],
       });
     } catch (e) {
       // confetti fallback
@@ -125,11 +125,6 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
     const ctx = chartCanvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    // Create gradient fill matching palette
-    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, '#7f3e3b');
-    gradient.addColorStop(1, '#a26f4a');
-
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -138,13 +133,12 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
           {
             label: 'Appropriate Responses',
             data: [3, 5, 6, 8, 9],
-            backgroundColor: gradient,
-            hoverBackgroundColor: '#944945',
-            borderColor: '#d6c8c5',
-            borderWidth: 1.5,
-            borderRadius: 8,
+            backgroundColor: ['#e0533c', '#e0533c', '#ffd166', '#ffd166', '#06d6a0'],
+            borderColor: '#000000',
+            borderWidth: 2,
+            borderRadius: 0,
             borderSkipped: false,
-            barThickness: 32,
+            barThickness: 36,
           },
         ],
       },
@@ -156,13 +150,13 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
             display: false,
           },
           tooltip: {
-            backgroundColor: '#1a1618',
-            titleColor: '#d6c8c5',
+            backgroundColor: '#000000',
+            titleColor: '#ffd166',
             bodyColor: '#ffffff',
-            borderColor: '#7f3e3b',
-            borderWidth: 1,
+            borderColor: '#000000',
+            borderWidth: 2,
             padding: 10,
-            cornerRadius: 8,
+            cornerRadius: 0,
             displayColors: false,
             callbacks: {
               label: (context) => `Appropriate Responses: ${context.parsed.y} / 10`,
@@ -177,9 +171,9 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
             ticks: {
               color: '#d6c8c5',
               font: {
-                family: 'system-ui, sans-serif',
+                family: 'monospace',
                 size: 11,
-                weight: 600,
+                weight: 'bold',
               },
             },
           },
@@ -190,12 +184,12 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
               stepSize: 2,
               color: '#d6c8c5',
               font: {
-                family: 'system-ui, sans-serif',
+                family: 'monospace',
                 size: 11,
               },
             },
             grid: {
-              color: 'rgba(127, 62, 59, 0.25)',
+              color: '#2a2428',
             },
           },
         },
@@ -212,24 +206,22 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto py-4 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between text-center items-center">
+    <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 min-h-[calc(100vh-80px)] flex flex-col justify-between items-stretch">
       {/* Header Context */}
-      <div className="mb-3 flex flex-col items-center justify-center gap-2 text-center w-full">
-        <div className="flex flex-col items-center justify-center text-center">
-          <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#a26f4a]">
-            <span>Screen 5 of 6</span>
-            <span>&bull;</span>
-            <span>Therapist Real-Time Supervision Hub</span>
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-left">
+        <div>
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 bg-[#ffd166] text-black font-mono text-xs font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_#000] mb-2">
+            <span>05 / 06 CLINICIAN HUB</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#d6c8c5] text-center mt-1">
-            Clinician Supervision Dashboard
+          <h2 className="font-heading text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+            Real-Time Clinical Supervision Console
           </h2>
         </div>
 
         {/* Live Headset Telemetry Ping */}
-        <div className="flex items-center justify-center gap-2 bg-[#1a1618] px-3.5 py-1.5 rounded-2xl border border-[#7f3e3b]/60 text-xs text-[#d6c8c5] shadow-sm">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#22c55e] animate-pulse" />
-          <span>Participant Headset: <strong>Connected (32ms latency)</strong></span>
+        <div className="flex items-center gap-2 bg-[#181417] px-3.5 py-1.5 border-2 border-black font-mono text-xs font-black text-[#06d6a0] shadow-[3px_3px_0px_#000] uppercase">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#06d6a0] animate-pulse" />
+          <span>HEADSET: CONNECTED (32MS)</span>
         </div>
       </div>
 
@@ -238,19 +230,18 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full bg-[#1a1618] rounded-3xl border-2 border-[#7f3e3b]/50 shadow-2xl p-4 sm:p-6 mb-5 relative text-center"
+        className="w-full bg-[#181417] border-3 border-black shadow-[8px_8px_0px_#000] p-5 sm:p-6 mb-5 relative text-left"
       >
         {/* Top Bezel / Status Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-[#7f3e3b]/30 text-xs text-[#d6c8c5]/70 gap-2 text-center">
-          <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
-            <Laptop className="w-4 h-4 text-[#a26f4a]" />
-            <span className="font-semibold text-white">NeuroPractice Clinician Console v2.4</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b-2 border-black text-xs font-mono gap-2">
+          <div className="flex items-center gap-2 text-white font-black uppercase">
+            <Terminal className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+            <span>NEUROPRACTICE CLINICIAN CONSOLE v2.4</span>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 mx-auto sm:mx-0">
-            <span className="hidden sm:inline">Session ID: #NP-8821</span>
-            <span className="px-3 py-1 rounded-full bg-[#7f3e3b]/30 text-[#d6c8c5] font-mono text-[11px] border border-[#a26f4a]/50 font-bold flex items-center gap-1.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#a26f4a] animate-pulse" />
-              <span>LIVE SESSION: {liveSessionLabel}</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[#d6c8c5]/70">SESSION ID: #NP-8821</span>
+            <span className="px-2.5 py-0.5 bg-[#ffd166] text-black font-bold uppercase border border-black shadow-[2px_2px_0px_#000]">
+              LIVE: {liveSessionLabel}
             </span>
           </div>
         </div>
@@ -262,12 +253,12 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mb-4 bg-[#251f22] border-l-4 border-[#a26f4a] rounded-2xl p-3.5 flex items-center justify-center text-center gap-3 shadow-lg"
+              className="mb-4 bg-[#ffd166] border-3 border-black p-4 flex items-center gap-3 shadow-[4px_4px_0px_#000] font-mono text-black"
             >
-              <AlertCircle className="w-5 h-5 text-[#a26f4a] shrink-0" />
-              <div className="text-center">
-                <h4 className="text-white text-xs sm:text-sm font-bold text-center">{activeAlert.title}</h4>
-                <p className="text-[#d6c8c5] text-xs mt-0.5 text-center">{activeAlert.description}</p>
+              <AlertCircle className="w-5 h-5 stroke-[2.5] shrink-0" />
+              <div>
+                <h4 className="font-heading font-black text-sm uppercase">{activeAlert.title}</h4>
+                <p className="text-xs font-bold mt-0.5 uppercase">{activeAlert.description}</p>
               </div>
             </motion.div>
           )}
@@ -276,23 +267,21 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
         {/* Dashboard Grid: Left (Mirrored VR View + Live Transcript) | Right (Controls + Sliders) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left Column: Mirrored "VR View" Thumbnail + Live Transcript */}
-          <div className="lg:col-span-7 flex flex-col gap-4 text-center">
+          <div className="lg:col-span-7 flex flex-col gap-4">
             {/* Mirrored "VR View" Thumbnail */}
-            <div className="bg-[#251f22] rounded-3xl p-3.5 border border-[#7f3e3b]/40 text-center">
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-2 gap-2 text-center">
-                <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
-                  <Activity className="w-4 h-4 text-[#a26f4a]" />
-                  <span className="text-xs font-bold text-white uppercase tracking-wider text-center">
-                    Mirrored VR Participant View ({activeScenarioMeta.title})
-                  </span>
-                </div>
-                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#1a1618] text-[#d6c8c5] font-medium border border-[#7f3e3b]/30 mx-auto sm:mx-0">
-                  {isSessionPaused ? 'PAUSED' : 'STREAMING 1080p'}
+            <div className="bg-[#110e11] p-3.5 border-2 border-black shadow-[3px_3px_0px_#000]">
+              <div className="flex items-center justify-between mb-2 font-mono text-xs">
+                <span className="font-black text-white uppercase flex items-center gap-1.5">
+                  <Activity className="w-4 h-4 text-[#06d6a0] stroke-[2.5]" />
+                  <span>MIRRORED VR PARTICIPANT VIEW</span>
+                </span>
+                <span className="px-2 py-0.5 bg-black text-[#06d6a0] border border-black text-[10px] font-bold uppercase">
+                  {isSessionPaused ? 'PAUSED' : 'STREAMING 1080P'}
                 </span>
               </div>
 
               {/* Reusable mini-scene illustration with pause overlay */}
-              <div className="relative h-[160px] sm:h-[180px] rounded-2xl overflow-hidden border border-[#7f3e3b]/40 bg-[#0f0e10]">
+              <div className="relative h-[160px] sm:h-[180px] overflow-hidden border-2 border-black bg-[#0d0c0f]">
                 {activeScenarioId === 'restaurant-ordering' ? (
                   <RestaurantRoomIllustration isThumbnail={true} isSpeaking={!isSessionPaused} />
                 ) : (
@@ -300,100 +289,87 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                 )}
                 
                 {isSessionPaused && (
-                  <div className="absolute inset-0 bg-[#0f0e10]/90 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4">
-                    <Pause className="w-8 h-8 text-[#a26f4a] mb-2" />
-                    <span className="text-sm font-bold text-white">Rehearsal Paused for Co-Regulation</span>
-                    <span className="text-xs text-[#d6c8c5] mt-1">Calm breathing audio active in participant headset</span>
+                  <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center p-4 text-center font-mono">
+                    <Pause className="w-8 h-8 text-[#ffd166] mb-2 stroke-[3]" />
+                    <span className="text-sm font-black text-white uppercase">REHEARSAL PAUSED FOR CO-REGULATION</span>
+                    <span className="text-xs text-[#ffd166] mt-1 uppercase">CALM BREATHING AUDIO ACTIVE IN HEADSET</span>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Live Transcript Panel showing the last exchange */}
-            <div className="bg-[#251f22] text-[#d6c8c5] rounded-3xl p-4 sm:p-5 shadow-lg border border-[#7f3e3b]/40 flex-1 text-center">
-              <div className="flex flex-col sm:flex-row items-center justify-between pb-2 mb-3 border-b border-[#7f3e3b]/30 gap-1 text-center">
-                <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
-                  <FileText className="w-4 h-4 text-[#a26f4a]" />
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-[#d6c8c5]">
-                    Live Exchange Transcript ({activeScenarioMeta.title})
+            <div className="bg-[#110e11] p-4 sm:p-5 border-2 border-black shadow-[3px_3px_0px_#000] flex-1 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-2 mb-3 border-b-2 border-black font-mono text-xs">
+                  <span className="font-black uppercase text-white flex items-center gap-1.5">
+                    <FileText className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+                    <span>LIVE EXCHANGE TRANSCRIPT</span>
+                  </span>
+                  <span className="text-[#d6c8c5]/70 font-bold uppercase text-[10px]">
+                    {lastExchange?.timestamp || 'JUST NOW'} &bull; {difficulty.toUpperCase()}
                   </span>
                 </div>
-                <span className="text-[11px] text-[#d6c8c5]/60 font-mono mx-auto sm:mx-0">
-                  {lastExchange?.timestamp || 'Just now'} &bull; Difficulty: {difficulty.toUpperCase()}
-                </span>
-              </div>
 
-              {/* Question */}
-              <div className="mb-2 text-center">
-                <div className="text-[11px] font-bold text-[#a26f4a] uppercase text-center">
-                  {activeScenarioMeta.roleLabel} ({activeScenarioMeta.npcName}):
+                {/* Question */}
+                <div className="mb-2">
+                  <div className="font-mono text-[10px] font-black text-[#ffd166] uppercase">
+                    {activeScenarioMeta.roleLabel} ({activeScenarioMeta.npcName}):
+                  </div>
+                  <p className="font-heading font-black text-sm sm:text-base text-white uppercase mt-0.5 leading-snug">
+                    "{lastExchange?.question || (activeScenarioId === 'restaurant-ordering' ? 'What can I get started for you today?' : 'Tell me about a time you faced a difficult problem at work or school.')}"
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-white mt-0.5 text-center">
-                  "{lastExchange?.question || (activeScenarioId === 'restaurant-ordering' ? 'What can I get started for you today?' : 'Tell me about a time you faced a difficult problem at work or school.')}"
-                </p>
-              </div>
 
-              {/* Long Pause Telemetry Flag */}
-              <div className="my-2.5 px-3 py-2 rounded-xl bg-[#1a1618] border border-[#a26f4a] text-[#d6c8c5] flex flex-col sm:flex-row items-center justify-center gap-2 text-xs font-semibold shadow-xs text-center">
-                <div className="flex items-center justify-center gap-2 text-[#a26f4a]">
-                  <span className="text-sm font-bold">⚠</span>
-                  <span className="font-bold">Flag: long pause detected</span>
-                  <span className="text-[11px] text-[#d6c8c5]/70 font-normal hidden sm:inline">(+4.2s delay before response formulation)</span>
+                {/* Long Pause Telemetry Flag */}
+                <div className="my-2.5 p-2 bg-[#ffd166] border-2 border-black text-black font-mono flex items-center justify-between text-xs font-black uppercase shadow-[2px_2px_0px_#000]">
+                  <div className="flex items-center gap-1.5">
+                    <span>⚠</span>
+                    <span>LONG PAUSE DETECTED (+4.2S DELAY)</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 bg-black text-white text-[10px]">
+                    DEBRIEF FLAG
+                  </span>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#7f3e3b]/30 text-[#d6c8c5] border border-[#a26f4a]/50 uppercase tracking-wider">
-                  Debrief Flag
-                </span>
-              </div>
 
-              {/* Participant Response */}
-              <div className="mb-3 bg-[#1a1618] p-3 rounded-2xl border border-[#7f3e3b]/50 text-center">
-                <div className="text-[11px] font-bold text-[#d6c8c5] uppercase text-center">
-                  Participant Response ({lastExchange?.userResponseLabel || 'Selected Response'}):
+                {/* Participant Response */}
+                <div className="mb-3 bg-[#181417] p-3 border-2 border-black">
+                  <div className="font-mono text-[10px] font-black text-[#06d6a0] uppercase">
+                    PARTICIPANT RESPONSE ({lastExchange?.userResponseLabel || 'SELECTED RESPONSE'}):
+                  </div>
+                  <p className="text-xs sm:text-sm text-white mt-0.5 font-medium">
+                    "{lastExchange?.userResponseText || 'During a group project, our dataset had missing values. I created a shared checklist to organize entries with my partner, and we submitted on time.'}"
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-white mt-0.5 italic text-center">
-                  "{lastExchange?.userResponseText || 'During a group project, our dataset had missing values. I created a shared checklist to organize entries with my partner, and we submitted on time.'}"
-                </p>
-              </div>
 
-              {/* NPC Reply */}
-              <div className="mb-2 text-center">
-                <div className="text-[11px] font-bold text-[#a26f4a] uppercase text-center">NPC Follow-Up Feedback:</div>
-                <p className="text-xs sm:text-sm text-[#d6c8c5]/90 mt-0.5 text-center">
-                  "{lastExchange?.npcReply || 'Thank you for walking me through that. Breaking down the dataset with a shared checklist demonstrates strong methodical thinking.'}"
-                </p>
+                {/* NPC Reply */}
+                <div className="mb-2">
+                  <div className="font-mono text-[10px] font-black text-[#ffd166] uppercase">NPC FOLLOW-UP FEEDBACK:</div>
+                  <p className="text-xs sm:text-sm text-[#d6c8c5] mt-0.5">
+                    "{lastExchange?.npcReply || 'Thank you for walking me through that. Breaking down the dataset with a shared checklist demonstrates strong methodical thinking.'}"
+                  </p>
+                </div>
               </div>
 
               {/* Clinician Analysis Note */}
-              <div className="pt-2 border-t border-[#7f3e3b]/30 flex items-center justify-center text-[11px] text-[#d6c8c5]/70 text-center">
-                <span className="font-medium text-[#d6c8c5] text-center">
-                  <strong className="text-[#a26f4a]">Clinical Note:</strong> {lastExchange?.clinicianNotes || 'Direct, structured communication with zero panic response.'}
-                </span>
+              <div className="pt-2.5 mt-2 border-t-2 border-black font-mono text-[11px] text-[#d6c8c5]">
+                <strong className="text-[#ffd166] uppercase">CLINICAL EVAL:</strong> {lastExchange?.clinicianNotes || 'Direct, structured communication with zero panic response.'}
               </div>
             </div>
           </div>
 
           {/* Right Column: In-Headset Controls & Dynamic Difficulty Slider */}
-          <div className="lg:col-span-5 flex flex-col gap-4 text-center">
+          <div className="lg:col-span-5 flex flex-col gap-4">
             {/* Difficulty Slider */}
-            <div className="bg-[#251f22] rounded-3xl p-4 border border-[#7f3e3b]/40 text-center">
-              <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-bold text-white mb-2 gap-2 text-center">
-                <div className="flex items-center justify-center gap-2 mx-auto sm:mx-0">
-                  <Sliders className="w-4 h-4 text-[#a26f4a]" />
-                  <span>Real-Time Difficulty Adjustment</span>
+            <div className="bg-[#110e11] p-4 border-2 border-black shadow-[3px_3px_0px_#000]">
+              <div className="flex items-center justify-between font-mono text-xs font-black text-white mb-2 uppercase">
+                <div className="flex items-center gap-1.5">
+                  <Sliders className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+                  <span>DIFFICULTY LEVEL</span>
                 </div>
-                <div className="flex items-center justify-center gap-1.5 px-3 py-0.5 rounded-full bg-[#1a1618] text-xs font-mono font-bold border border-[#7f3e3b]/50 mx-auto sm:mx-0">
-                  <span 
-                    className="w-2 h-2 rounded-full shrink-0" 
-                    style={{ 
-                      backgroundColor: difficulty === 'easy' ? '#7f3e3b' : (difficulty === 'moderate' ? '#a26f4a' : '#d6c8c5') 
-                    }} 
-                  />
-                  <span style={{ 
-                    color: difficulty === 'easy' ? '#d6c8c5' : (difficulty === 'moderate' ? '#a26f4a' : '#d6c8c5') 
-                  }}>
-                    {difficulty.toUpperCase()}
-                  </span>
-                </div>
+                <span className="px-2 py-0.5 bg-[#ffd166] text-black border border-black font-black">
+                  {difficulty.toUpperCase()}
+                </span>
               </div>
 
               <input
@@ -404,26 +380,20 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                 step="1"
                 value={diffToNum(difficulty)}
                 onChange={(e) => handleDifficultySlider(Number(e.target.value))}
-                className="w-full h-2.5 bg-[#141012] rounded-lg appearance-none cursor-pointer accent-[#7f3e3b]"
+                className="w-full h-2.5 bg-[#181417] border border-black appearance-none cursor-pointer accent-[#ffd166]"
               />
 
-              <div className="flex justify-between text-[11px] font-bold text-[#d6c8c5]/80 mt-2.5 px-1">
-                <span className={`flex items-center gap-1 ${difficulty === 'easy' ? 'text-[#d6c8c5] font-extrabold' : 'text-[#d6c8c5]/60'}`}>
-                  <span className="w-2 h-2 rounded-full bg-[#7f3e3b]" /> 1. Easy
-                </span>
-                <span className={`flex items-center gap-1 ${difficulty === 'moderate' ? 'text-[#a26f4a] font-extrabold' : 'text-[#d6c8c5]/60'}`}>
-                  <span className="w-2 h-2 rounded-full bg-[#a26f4a]" /> 2. Moderate
-                </span>
-                <span className={`flex items-center gap-1 ${difficulty === 'hard' ? 'text-[#d6c8c5] font-extrabold' : 'text-[#d6c8c5]/60'}`}>
-                  <span className="w-2 h-2 rounded-full bg-[#d6c8c5]" /> 3. Hard
-                </span>
+              <div className="flex justify-between font-mono text-[10px] font-black uppercase mt-2">
+                <span className={difficulty === 'easy' ? 'text-[#06d6a0]' : 'text-[#d6c8c5]/50'}>1. EASY</span>
+                <span className={difficulty === 'moderate' ? 'text-[#ffd166]' : 'text-[#d6c8c5]/50'}>2. MODERATE</span>
+                <span className={difficulty === 'hard' ? 'text-[#e0533c]' : 'text-[#d6c8c5]/50'}>3. HARD</span>
               </div>
             </div>
 
             {/* Four Clinician Control Action Buttons: Pause, Cue Hint, Ease Off, End Session */}
-            <div className="bg-[#251f22] rounded-3xl p-4 border border-[#7f3e3b]/40 text-center">
-              <div className="text-xs font-bold text-white uppercase tracking-wider mb-3 text-center">
-                In-Headset Clinical Interventions
+            <div className="bg-[#110e11] p-4 border-2 border-black shadow-[3px_3px_0px_#000]">
+              <div className="font-mono text-xs font-black text-white uppercase tracking-wider mb-3">
+                TACTICAL CLINICAL INTERVENTIONS
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -431,169 +401,171 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
                 <button
                   onClick={handlePauseToggle}
                   id="action-pause-btn"
-                  className={`p-3 rounded-2xl border flex flex-col items-center justify-center gap-1.5 text-xs font-bold transition-all cursor-pointer ${
+                  className={`p-3 border-2 border-black flex flex-col items-center justify-center gap-1.5 font-mono text-xs font-black uppercase transition-all cursor-pointer shadow-[3px_3px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] ${
                     isSessionPaused
-                      ? 'bg-[#7f3e3b] text-white border-[#a26f4a]'
-                      : 'bg-[#1a1618] hover:bg-[#2e2326] text-white border-[#7f3e3b]/50'
+                      ? 'bg-[#ffd166] text-black'
+                      : 'bg-[#181417] text-white hover:bg-[#221c21]'
                   }`}
                 >
-                  {isSessionPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5 text-[#a26f4a]" />}
-                  <span>{isSessionPaused ? 'Resume Session' : 'Pause Rehearsal'}</span>
+                  {isSessionPaused ? <Play className="w-5 h-5 stroke-[3]" /> : <Pause className="w-5 h-5 text-[#ffd166] stroke-[3]" />}
+                  <span>{isSessionPaused ? 'RESUME' : 'PAUSE VR'}</span>
                 </button>
 
                 {/* 2. Cue Hint */}
                 <button
                   onClick={handleCueHint}
                   id="action-hint-btn"
-                  className="p-3 rounded-2xl bg-[#1a1618] hover:bg-[#2e2326] text-white border border-[#7f3e3b]/50 flex flex-col items-center justify-center gap-1.5 text-xs font-bold transition-all cursor-pointer hover:border-[#a26f4a]"
+                  className="p-3 bg-[#181417] hover:bg-[#221c21] text-white border-2 border-black flex flex-col items-center justify-center gap-1.5 font-mono text-xs font-black uppercase transition-all cursor-pointer shadow-[3px_3px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px]"
                 >
-                  <Lightbulb className="w-5 h-5 text-[#a26f4a]" />
-                  <span>Cue In-VR Hint</span>
+                  <Lightbulb className="w-5 h-5 text-[#ffd166] stroke-[2.5]" />
+                  <span>CUE IN-VR HINT</span>
                 </button>
 
                 {/* 3. Ease Off */}
                 <button
                   onClick={handleEaseOff}
                   id="action-ease-off-btn"
-                  className="p-3 rounded-2xl bg-[#1a1618] hover:bg-[#2e2326] text-white border border-[#7f3e3b]/50 flex flex-col items-center justify-center gap-1.5 text-xs font-bold transition-all cursor-pointer hover:border-[#a26f4a]"
+                  className="p-3 bg-[#181417] hover:bg-[#221c21] text-white border-2 border-black flex flex-col items-center justify-center gap-1.5 font-mono text-xs font-black uppercase transition-all cursor-pointer shadow-[3px_3px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px]"
                 >
-                  <ShieldAlert className="w-5 h-5 text-[#d6c8c5]" />
-                  <span>Ease Off Stimulus</span>
+                  <ShieldAlert className="w-5 h-5 text-[#e0533c] stroke-[2.5]" />
+                  <span>EASE STIMULUS</span>
                 </button>
 
                 {/* 4. End Session */}
                 <button
                   onClick={handleEndSession}
                   id="action-end-session-btn"
-                  className="p-3 rounded-2xl bg-[#7f3e3b] hover:bg-[#944945] text-white border border-[#a26f4a]/60 flex flex-col items-center justify-center gap-1.5 text-xs font-bold transition-all cursor-pointer shadow-md"
+                  className="p-3 bg-[#06d6a0] hover:bg-[#08e9ae] text-black border-2 border-black flex flex-col items-center justify-center gap-1.5 font-mono text-xs font-black uppercase transition-all cursor-pointer shadow-[3px_3px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px]"
                 >
-                  <CheckCircle2 className="w-5 h-5 text-[#d6c8c5]" />
-                  <span>End Session</span>
+                  <CheckCircle2 className="w-5 h-5 stroke-[3]" />
+                  <span>END SESSION</span>
                 </button>
               </div>
             </div>
 
             {/* Quick Session Stats */}
-            <div className="grid grid-cols-2 gap-3 text-center">
-              <div className="bg-[#251f22] p-3.5 rounded-2xl border border-[#7f3e3b]/30 text-center">
-                <div className="text-[10px] font-bold text-[#d6c8c5]/70 uppercase text-center">Emotional Stability</div>
-                <div className="text-xl font-extrabold text-[#22c55e] mt-0.5 text-center">94%</div>
-                <div className="text-[10px] text-[#d6c8c5]/60 text-center">Steady baseline</div>
+            <div className="grid grid-cols-2 gap-3 font-mono">
+              <div className="bg-[#110e11] p-3.5 border-2 border-black shadow-[3px_3px_0px_#000]">
+                <div className="text-[10px] font-black text-[#d6c8c5]/70 uppercase">REGULATION INDEX</div>
+                <div className="text-2xl font-black text-[#06d6a0] mt-0.5">94%</div>
+                <div className="text-[10px] text-[#d6c8c5]/60 uppercase">STEADY BASELINE</div>
               </div>
-              <div className="bg-[#251f22] p-3.5 rounded-2xl border border-[#7f3e3b]/30 text-center">
-                <div className="text-[10px] font-bold text-[#d6c8c5]/70 uppercase text-center">Avg Response Time</div>
-                <div className="text-xl font-extrabold text-white mt-0.5 text-center">4.2s</div>
-                <div className="text-[10px] text-[#d6c8c5]/60 text-center">Thoughtful pacing</div>
+              <div className="bg-[#110e11] p-3.5 border-2 border-black shadow-[3px_3px_0px_#000]">
+                <div className="text-[10px] font-black text-[#d6c8c5]/70 uppercase">AVG LATENCY</div>
+                <div className="text-2xl font-black text-white mt-0.5">4.2s</div>
+                <div className="text-[10px] text-[#d6c8c5]/60 uppercase">DELIBERATE PACING</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* BAR CHART SECTION (Chart.js): Appropriate responses across 5 mock sessions (3, 5, 6, 8, 9) */}
-        <div className="mt-6 pt-5 border-t border-[#7f3e3b]/30 text-center">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 mb-3 text-center">
-            <div className="text-center sm:text-left mx-auto sm:mx-0">
-              <div className="flex items-center justify-center sm:justify-start gap-2">
-                <BarChart3 className="w-4 h-4 text-[#a26f4a]" />
-                <h3 className="text-sm font-bold text-white text-center">
-                  Longitudinal Progress: Appropriate Responses Per Session
+        <div className="mt-6 pt-5 border-t-2 border-black">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-3">
+            <div>
+              <div className="flex items-center gap-2 font-mono">
+                <BarChart3 className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+                <h3 className="font-heading font-black text-base text-white uppercase">
+                  Longitudinal Progress Matrix: Appropriate Responses Per Session
                 </h3>
               </div>
-              <p className="text-xs text-[#d6c8c5]/80 mt-0.5 text-center sm:text-left">
-                5 mock sessions showing upward social-skill mastery trend (3 &rarr; 5 &rarr; 6 &rarr; 8 &rarr; 9)
+              <p className="text-xs font-mono text-[#d6c8c5]/80 mt-0.5 uppercase">
+                5 SESSIONS SHOWING SOCIAL MASTERY CURVE (3 &rarr; 5 &rarr; 6 &rarr; 8 &rarr; 9)
               </p>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-xs font-semibold text-[#d6c8c5] bg-[#251f22] px-3.5 py-1.5 rounded-xl border border-[#7f3e3b]/40 mx-auto sm:mx-0">
-              <Sparkles className="w-3.5 h-3.5 text-[#a26f4a]" />
-              <span>+200% Skill Retention Gain</span>
+            <div className="flex items-center gap-2 font-mono text-xs font-black text-black bg-[#ffd166] px-3 py-1 border-2 border-black shadow-[2px_2px_0px_#000] uppercase">
+              <Sparkles className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>+200% RETENTION GAIN</span>
             </div>
           </div>
 
           {/* Canvas Chart Container */}
-          <div className="h-[200px] sm:h-[220px] w-full bg-[#141012] rounded-2xl p-3 border border-[#7f3e3b]/30">
+          <div className="h-[200px] sm:h-[220px] w-full bg-[#110e11] p-3 border-2 border-black shadow-[3px_3px_0px_#000]">
             <canvas ref={chartCanvasRef} id="sessionProgressChart" />
           </div>
         </div>
       </motion.div>
 
-      {/* Bottom Pitch Toolbar */}
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 text-center">
+      {/* Bottom Toolbar */}
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
         <button
           onClick={downloadOfflineHtml}
           id="download-offline-html-bottom-btn"
-          className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-[#1a1618] hover:bg-[#251f22] text-[#d6c8c5] hover:text-white border border-[#7f3e3b] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors order-2 sm:order-1 mx-auto sm:mx-0"
+          className="w-full sm:w-auto px-6 py-4 bg-[#181417] hover:bg-[#251f22] text-[#d6c8c5] hover:text-white border-3 border-black font-heading font-black text-xs sm:text-sm uppercase tracking-wider shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] active:translate-x-[2px] active:translate-y-[2px] flex items-center justify-center gap-2 cursor-pointer transition-all order-2 sm:order-1"
         >
-          <Download className="w-4 h-4 text-[#a26f4a]" />
-          <span>Download Offline Single-File HTML</span>
+          <Download className="w-4 h-4 text-[#ffd166] stroke-[2.5]" />
+          <span>DOWNLOAD OFFLINE REPORT (HTML)</span>
         </button>
 
         <button
           onClick={onProceedToDebrief}
           id="proceed-to-debrief-btn"
-          className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#7f3e3b] hover:bg-[#944945] text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-[#7f3e3b]/30 flex items-center justify-center gap-2 cursor-pointer transition-all order-1 sm:order-2 group border border-[#a26f4a]/50 mx-auto sm:mx-0"
+          className="w-full sm:w-auto px-8 py-4 bg-[#ffd166] hover:bg-[#ffe28a] text-black font-heading font-black text-sm sm:text-base uppercase tracking-wider border-3 border-black shadow-[5px_5px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[7px_7px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#000] flex items-center justify-center gap-2 cursor-pointer transition-all order-1 sm:order-2 group"
         >
-          <span>Proceed to Session Debrief</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#d6c8c5]" />
+          <span>PROCEED TO SESSION DEBRIEF</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform stroke-[3]" />
         </button>
       </div>
 
       {/* Session Completed Summary Modal */}
       <AnimatePresence>
         {sessionCompletedModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0f0e10]/85 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#1a1618] border-2 border-[#7f3e3b] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl text-center"
+              className="bg-[#181417] border-3 border-black p-6 sm:p-8 max-w-lg w-full shadow-[10px_10px_0px_#ffd166] text-left font-mono"
             >
-              <div className="w-14 h-14 rounded-2xl bg-[#7f3e3b]/30 border border-[#a26f4a] flex items-center justify-center mx-auto mb-4 text-[#d6c8c5]">
-                <CheckCircle2 className="w-8 h-8 text-[#a26f4a]" />
+              <div className="w-12 h-12 bg-[#06d6a0] border-2 border-black flex items-center justify-center mb-4 text-black shadow-[3px_3px_0px_#000]">
+                <CheckCircle2 className="w-7 h-7 stroke-[3]" />
               </div>
 
-              <h3 className="text-2xl font-extrabold text-white mb-2">Rehearsal Session Completed</h3>
-              <p className="text-sm text-[#d6c8c5]/90 mb-6 leading-relaxed">
-                Participant finished the behavioral rehearsal scenario with <strong>9/10 appropriate responses</strong> and 1 pacing flag logged.
+              <h3 className="font-heading text-2xl font-black text-white uppercase tracking-tight mb-2">
+                Rehearsal Session Completed
+              </h3>
+              <p className="text-xs text-[#d6c8c5] mb-6 leading-relaxed uppercase">
+                PARTICIPANT COMPLETED SIMULATION WITH <strong className="text-[#06d6a0]">9/10 APPROPRIATE RESPONSES</strong> AND 1 PACING FLAG LOGGED.
               </p>
 
-              <div className="bg-[#251f22] p-4 rounded-2xl border border-[#7f3e3b]/40 text-center mb-6 space-y-2 text-xs">
-                <div className="flex justify-between text-slate-300">
-                  <span>Session Goal:</span>
-                  <span className="font-bold text-white text-right max-w-[220px] truncate">
+              <div className="bg-[#110e11] p-4 border-2 border-black mb-6 space-y-2 text-xs">
+                <div className="flex justify-between text-[#d6c8c5]">
+                  <span>GOAL:</span>
+                  <span className="font-bold text-white uppercase text-right max-w-[220px] truncate">
                     {intakeConfig?.sessionGoal || 'Build confidence answering behavioral questions'}
                   </span>
                 </div>
-                <div className="flex justify-between text-slate-300">
-                  <span>Scenario Difficulty:</span>
-                  <span className="font-bold text-[#a26f4a] uppercase">{difficulty}</span>
+                <div className="flex justify-between text-[#d6c8c5]">
+                  <span>DIFFICULTY:</span>
+                  <span className="font-bold text-[#ffd166] uppercase">{difficulty}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
-                  <span>Sensory Regulation Index:</span>
-                  <span className="font-bold text-[#22c55e]">Optimal (94%)</span>
+                <div className="flex justify-between text-[#d6c8c5]">
+                  <span>REGULATION INDEX:</span>
+                  <span className="font-bold text-[#06d6a0] uppercase">OPTIMAL (94%)</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
-                  <span>Flagged Moments:</span>
-                  <span className="font-bold text-[#a26f4a]">1 Long Pause (+4.2s)</span>
+                <div className="flex justify-between text-[#d6c8c5]">
+                  <span>FLAGGED MOMENTS:</span>
+                  <span className="font-bold text-[#e0533c] uppercase">1 LONG PAUSE (+4.2S)</span>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 font-heading font-black uppercase text-xs">
                 <button
                   onClick={() => setSessionCompletedModal(false)}
-                  className="flex-1 py-3.5 rounded-full bg-[#251f22] hover:bg-[#342a2d] text-[#d6c8c5] font-bold text-xs transition-colors cursor-pointer border border-[#7f3e3b]/50"
+                  className="flex-1 py-3.5 bg-[#251f22] hover:bg-[#342a2d] text-[#d6c8c5] border-2 border-black shadow-[3px_3px_0px_#000] cursor-pointer"
                 >
-                  Close
+                  CLOSE
                 </button>
                 <button
                   onClick={() => {
                     setSessionCompletedModal(false);
                     onProceedToDebrief();
                   }}
-                  className="flex-1 py-3.5 rounded-full bg-[#7f3e3b] hover:bg-[#944945] text-white font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-lg border border-[#a26f4a]/50"
+                  className="flex-1 py-3.5 bg-[#ffd166] hover:bg-[#ffe28a] text-black border-2 border-black shadow-[3px_3px_0px_#000] cursor-pointer flex items-center justify-center gap-1.5"
                 >
-                  <span>View Full Debrief</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#d6c8c5]" />
+                  <span>VIEW FULL DEBRIEF</span>
+                  <ArrowRight className="w-4 h-4 stroke-[3]" />
                 </button>
               </div>
             </motion.div>
@@ -603,3 +575,4 @@ export const TherapistDashboardScreen: React.FC<TherapistDashboardScreenProps> =
     </div>
   );
 };
+
