@@ -9,9 +9,9 @@ export interface DifficultyScenarioExtended extends DifficultyScenario {
 }
 
 export const DIFFICULTY_PALETTE = {
-  easy: '#02C39A',
-  moderate: '#028090',
-  hard: '#F4A261',
+  easy: '#22c55e', // Grounding Forest Green accent
+  moderate: '#a26f4a', // Warm Amber Tan
+  hard: '#7f3e3b', // Deep Terracotta Burgundy
 } as const;
 
 export const SCENARIO_CATALOG: ScenarioDefinition[] = [
@@ -92,8 +92,8 @@ export const ALL_SCENARIOS_DATA: Record<ScenarioId, Record<string, DifficultySce
     easy: {
       difficulty: 'easy',
       difficultyLabel: 'Easy',
-      dotColor: '#02C39A',
-      badgeColor: 'text-[#02C39A]',
+      dotColor: '#22c55e',
+      badgeColor: 'text-[#22c55e]',
       npcTone: 'Warm & Encouraging',
       npcToneDescription: 'NPC is warm and supportive, with patient pacing and reassuring feedback.',
       interviewerAvatarMood: 'warm',
@@ -133,8 +133,8 @@ export const ALL_SCENARIOS_DATA: Record<ScenarioId, Record<string, DifficultySce
     moderate: {
       difficulty: 'moderate',
       difficultyLabel: 'Moderate',
-      dotColor: '#028090',
-      badgeColor: 'text-[#028090]',
+      dotColor: '#a26f4a',
+      badgeColor: 'text-[#a26f4a]',
       npcTone: 'Neutral & Professional',
       npcToneDescription: 'NPC is neutral, concise, and business-focused with standard interview pacing.',
       interviewerAvatarMood: 'neutral',
@@ -174,8 +174,8 @@ export const ALL_SCENARIOS_DATA: Record<ScenarioId, Record<string, DifficultySce
     hard: {
       difficulty: 'hard',
       difficultyLabel: 'Hard',
-      dotColor: '#F4A261',
-      badgeColor: 'text-[#F4A261]',
+      dotColor: '#7f3e3b',
+      badgeColor: 'text-[#7f3e3b]',
       npcTone: 'Rapid Follow-Up & Interruption',
       npcToneDescription: 'NPC interrupts or asks rapid follow-up questions under high conversational pressure.',
       interviewerAvatarMood: 'intense',
@@ -217,8 +217,8 @@ export const ALL_SCENARIOS_DATA: Record<ScenarioId, Record<string, DifficultySce
     easy: {
       difficulty: 'easy',
       difficultyLabel: 'Easy',
-      dotColor: '#02C39A',
-      badgeColor: 'text-[#02C39A]',
+      dotColor: '#22c55e',
+      badgeColor: 'text-[#22c55e]',
       npcTone: 'Patient & Welcoming (Menu Suggestions)',
       npcToneDescription: 'Server is patient, friendly, and happy to offer menu suggestions with zero rush.',
       interviewerAvatarMood: 'warm',
@@ -258,8 +258,8 @@ export const ALL_SCENARIOS_DATA: Record<ScenarioId, Record<string, DifficultySce
     moderate: {
       difficulty: 'moderate',
       difficultyLabel: 'Moderate',
-      dotColor: '#028090',
-      badgeColor: 'text-[#028090]',
+      dotColor: '#a26f4a',
+      badgeColor: 'text-[#a26f4a]',
       npcTone: 'Neutral & Efficient (Ambient Noise)',
       npcToneDescription: 'Background noise in café; server is professional, neutral, and direct.',
       interviewerAvatarMood: 'neutral',
@@ -299,8 +299,8 @@ export const ALL_SCENARIOS_DATA: Record<ScenarioId, Record<string, DifficultySce
     hard: {
       difficulty: 'hard',
       difficultyLabel: 'Hard',
-      dotColor: '#F4A261',
-      badgeColor: 'text-[#F4A261]',
+      dotColor: '#7f3e3b',
+      badgeColor: 'text-[#7f3e3b]',
       npcTone: 'Rushed Follow-Up & Order Mix-Up',
       npcToneDescription: 'Server is in a rush due to high volume, and a ticket mix-up requires quick polite resolution.',
       interviewerAvatarMood: 'intense',

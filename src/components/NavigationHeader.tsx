@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ScreenType } from '../types';
 import { Sparkles, Glasses, Download, RotateCcw, Volume2, VolumeX, ShieldCheck, Activity } from 'lucide-react';
 import { downloadOfflineHtml } from '../utils/offlineHtmlGenerator';
-import { checkBackendHealth, HealthStatus } from '../services/apiService';
 
 interface NavigationHeaderProps {
   currentScreen: ScreenType;
@@ -19,14 +18,6 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   onToggleMute,
   onResetDemo,
 }) => {
-  const [health, setHealth] = useState<HealthStatus | null>(null);
-
-  useEffect(() => {
-    checkBackendHealth().then((status) => {
-      if (status) setHealth(status);
-    });
-  }, []);
-
   const steps: { id: ScreenType; label: string; number: number }[] = [
     { id: 'intake', label: 'Intake', number: 1 },
     { id: 'scenario-select', label: 'Scenarios', number: 2 },
@@ -37,57 +28,51 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#022427]/90 backdrop-blur-md border-b border-[#028090]/40 px-4 lg:px-8 py-3 transition-all shadow-lg">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+    <header className="sticky top-0 z-50 bg-[#0f0e10]/95 backdrop-blur-md border-b border-[#7f3e3b]/50 px-3 lg:px-6 py-2.5 transition-all shadow-xl">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5 text-center">
         {/* Brand identity */}
-        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+        <div className="flex items-center justify-center gap-2.5 w-full md:w-auto">
           <button
             onClick={() => onNavigate('title')}
-            className="flex items-center gap-2.5 group text-left cursor-pointer focus:outline-none"
+            className="flex items-center justify-center gap-2 group text-center cursor-pointer focus:outline-none"
             id="brand-logo-btn"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00A896] to-[#028090] p-0.5 shadow-md flex items-center justify-center group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#022F33] rounded-[10px] flex items-center justify-center">
-                <Glasses className="w-5 h-5 text-[#02C39A]" />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#7f3e3b] to-[#a26f4a] p-0.5 shadow-md flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+              <div className="w-full h-full bg-[#1a1618] rounded-[10px] flex items-center justify-center">
+                <Glasses className="w-4 h-4 text-[#d6c8c5]" />
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-lg text-white tracking-tight">NeuroPractice</span>
-                <span className="text-xs font-bold px-1.5 py-0.5 rounded bg-[#02C39A]/20 text-[#5EEAD4] border border-[#02C39A]/40 uppercase tracking-wider">
+            <div className="text-left sm:text-center">
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="font-extrabold text-sm sm:text-base text-white tracking-tight">NeuroPractice</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#7f3e3b]/30 text-[#d6c8c5] border border-[#a26f4a]/50 uppercase tracking-wider">
                   VR
                 </span>
-                {health?.status === 'ok' && (
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#028090]/30 text-[#02C39A] border border-[#02C39A]/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#02C39A] animate-ping" />
-                    <span>API Live</span>
-                  </span>
-                )}
               </div>
-              <p className="text-[11px] text-[#99F6E4]/80 hidden sm:block font-medium">
+              <p className="text-[10px] text-[#d6c8c5]/70 hidden sm:block font-medium text-center">
                 Clinical Social-Skills Rehearsal Platform
               </p>
             </div>
           </button>
 
-          {/* Sensory sound quick control */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Sensory sound quick control on mobile */}
+          <div className="flex items-center gap-1.5 md:hidden ml-auto">
             <button
               onClick={onToggleMute}
-              className={`p-2 rounded-lg border text-xs font-medium transition-colors ${
+              className={`p-1.5 rounded-xl border text-[10px] font-medium transition-colors ${
                 isMuted
-                  ? 'border-[#028090]/40 text-[#99F6E4]/60 bg-[#032A2E]'
-                  : 'border-[#02C39A]/60 text-[#02C39A] bg-[#02C39A]/10'
+                  ? 'border-[#7f3e3b]/40 text-[#d6c8c5]/60 bg-[#1a1618]'
+                  : 'border-[#a26f4a]/80 text-[#d6c8c5] bg-[#7f3e3b]/30'
               }`}
               title={isMuted ? 'Unmute Ambient Sound' : 'Mute Ambient Sound'}
             >
-              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-[#a26f4a]" />}
             </button>
           </div>
         </div>
 
-        {/* 4-Step Screen Flow Breadcrumb Switcher */}
-        <nav aria-label="Demo Flow Steps" className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-full py-1">
+        {/* 6-Step Screen Flow Breadcrumb Switcher (No Scroll, Compact, Centered) */}
+        <nav aria-label="Demo Flow Steps" className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 py-0.5">
           {steps.map((step) => {
             const isActive = currentScreen === step.id;
             return (
@@ -95,15 +80,15 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
                 key={step.id}
                 id={`nav-step-${step.id}`}
                 onClick={() => onNavigate(step.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap ${
                   isActive
-                    ? 'bg-[#02C39A] text-[#022F33] shadow-md shadow-[#02C39A]/20 scale-105 font-bold'
-                    : 'bg-[#03343A] text-[#99F6E4] hover:bg-[#044850] hover:text-white border border-[#028090]/30'
+                    ? 'bg-[#7f3e3b] text-white shadow-md shadow-[#7f3e3b]/40 font-bold border border-[#a26f4a]'
+                    : 'bg-[#1a1618] text-[#d6c8c5] hover:bg-[#251f22] hover:text-white border border-[#7f3e3b]/40'
                 }`}
               >
                 <span
-                  className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${
-                    isActive ? 'bg-[#022F33] text-[#02C39A]' : 'bg-[#022F33]/60 text-[#99F6E4]'
+                  className={`w-3.5 h-3.5 rounded-full text-[9px] flex items-center justify-center font-bold shrink-0 ${
+                    isActive ? 'bg-[#1a1618] text-[#d6c8c5]' : 'bg-[#0f0e10] text-[#d6c8c5]/70'
                   }`}
                 >
                   {step.number}
@@ -114,40 +99,40 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
           })}
         </nav>
 
-        {/* Global Pitch Actions & Offline Exporter */}
-        <div className="hidden lg:flex items-center gap-2">
+        {/* Global Actions & Offline Exporter */}
+        <div className="hidden lg:flex items-center justify-center gap-1.5">
           <button
             onClick={onToggleMute}
             id="header-mute-btn"
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all ${
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer ${
               isMuted
-                ? 'border-[#028090]/30 text-[#99F6E4]/70 bg-[#032E34] hover:text-white'
-                : 'border-[#02C39A]/60 text-[#02C39A] bg-[#02C39A]/10 shadow-sm'
+                ? 'border-[#7f3e3b]/40 text-[#d6c8c5]/60 bg-[#1a1618] hover:text-white'
+                : 'border-[#a26f4a] text-[#d6c8c5] bg-[#7f3e3b]/30 shadow-sm'
             }`}
             title={isMuted ? 'Sensory Ambient Sound: Muted' : 'Sensory Ambient Sound: Active'}
           >
-            {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-[#02C39A]" />}
+            {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3 text-[#a26f4a]" />}
             <span>{isMuted ? 'Sound Off' : 'Calm Audio'}</span>
           </button>
 
           <button
             onClick={onResetDemo}
             id="header-reset-btn"
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#028090]/30 text-xs font-medium text-[#99F6E4]/80 hover:text-white hover:bg-[#033B42] transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl border border-[#7f3e3b]/40 text-[10px] sm:text-[11px] font-medium text-[#d6c8c5]/80 hover:text-white hover:bg-[#251f22] transition-colors cursor-pointer"
             title="Reset Rehearsal to Screen 1"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3 h-3" />
             <span>Restart</span>
           </button>
 
           <button
             onClick={downloadOfflineHtml}
             id="header-offline-export-btn"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#028090]/30 hover:bg-[#028090] text-white border border-[#00A896]/60 text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#7f3e3b]/40 hover:bg-[#7f3e3b] text-white border border-[#a26f4a]/60 text-[10px] sm:text-[11px] font-semibold shadow-sm transition-all cursor-pointer"
             title="Export full offline self-contained HTML file"
           >
-            <Download className="w-3.5 h-3.5 text-[#5EEAD4]" />
-            <span>Download Offline HTML</span>
+            <Download className="w-3 h-3 text-[#d6c8c5]" />
+            <span>Offline HTML</span>
           </button>
         </div>
       </div>

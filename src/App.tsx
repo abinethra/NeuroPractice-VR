@@ -53,7 +53,7 @@ export default function App() {
     const nextMute = !isMuted;
     setIsMuted(nextMute);
     if (!nextMute && sensorySettings.volume > 0) {
-      startCalmingSound(sensorySettings.volume);
+      startCalmingSound(sensorySettings.volume, sensorySettings.soundType);
     } else {
       stopCalmingSound();
     }
@@ -81,7 +81,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#022F33] text-slate-100 flex flex-col font-sans selection:bg-[#02C39A] selection:text-[#022F33]">
+    <div className="min-h-screen bg-[#0f0e10] text-[#d6c8c5] flex flex-col font-sans selection:bg-[#7f3e3b] selection:text-white">
       {/* Top Clinical Navigation Bar */}
       <NavigationHeader
         currentScreen={currentScreen}
@@ -92,7 +92,7 @@ export default function App() {
       />
 
       {/* Main Screen Container with Smooth Transitions */}
-      <main className="flex-1 flex flex-col relative overflow-x-hidden">
+      <main className="flex-1 flex flex-col items-center justify-center relative overflow-x-hidden w-full">
         <AnimatePresence mode="wait">
           {currentScreen === 'title' && (
             <motion.div
@@ -101,7 +101,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1 flex items-center"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <TitleScreen onStartDemo={() => setCurrentScreen('intake')} />
             </motion.div>
@@ -114,7 +114,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <IntakeScreen
                 initialConfig={intakeConfig}
@@ -130,7 +130,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <ScenarioSelectScreen
                 intakeConfig={intakeConfig}
@@ -148,7 +148,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <WaitingRoomScreen
                 sensorySettings={sensorySettings}
@@ -165,7 +165,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <InterviewScreen
                 scenarioId={selectedScenarioId}
@@ -184,7 +184,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <TherapistDashboardScreen
                 difficulty={difficulty}
@@ -203,7 +203,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
-              className="w-full flex-1"
+              className="w-full flex-1 flex flex-col items-center justify-center"
             >
               <DebriefScreen
                 intakeConfig={intakeConfig}
